@@ -1,0 +1,23 @@
+id: troubleshoot-port-conflict
+title: "Incident: Resolve Port 80 Conflict for Web Server"
+track: troubleshooting
+difficulty: advanced
+description: |
+  INCIDENT REPORT #409:
+  The company web server service (web-app.service) is failing to start with error:
+  "Address already in use - bind(2)".
+  
+  Diagnose which rogue process is holding TCP port 80, terminate it, and bring web-app.service
+  into active (running) state.
+tags: [troubleshooting, incident, networking, ports, systemd]
+estimated_minutes: 10
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "Find the process bound to port 80: 'sudo ss -tulpn | grep :80' or 'sudo lsof -i :80'."
+  - "Notice the PID of the rogue process (e.g. python3 rogue script)."
+  - "Kill the rogue process: 'sudo kill -9 <PID>'."
+  - "Start the web service: 'sudo systemctl restart web-app.service'."
+  - "Verify status: 'sudo systemctl status web-app.service' and 'curl -I http://127.0.0.1'."

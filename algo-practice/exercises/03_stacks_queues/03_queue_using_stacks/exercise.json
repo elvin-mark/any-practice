@@ -1,0 +1,21 @@
+{
+  "id": "stack_03_queue_using_stacks",
+  "name": "Implement Queue using Stacks",
+  "track": "Stacks & Queues",
+  "track_order": 3,
+  "order": 3,
+  "difficulty": "Easy",
+  "description": "Implement a first in first out (FIFO) queue using only two stacks.\n\nThe implemented queue should support all standard queue operations: `Push(x)`, `Pop()`, `Peek()`, and `Empty()`.",
+  "complexity": {
+    "time": "O(1) amortized for Pop and Peek, O(1) for Push",
+    "space": "O(N)"
+  },
+  "forbidden": [],
+  "entry_file": "queue_using_stacks.go",
+  "test_file": "queue_using_stacks_test.go",
+  "hints": [
+    "Use two slices as stacks: `inStack` for receiving incoming elements, and `outStack` for popping/peeking.",
+    "Push is straightforward: always append to `inStack`.",
+    "For Pop and Peek: if `outStack` is empty, transfer all elements from `inStack` to `outStack` (reversing their order). Then the top of `outStack` is the front of the queue!"
+  ]
+}

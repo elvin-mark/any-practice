@@ -1,0 +1,33 @@
+# Binaries
+bin/
+*/bin/
+algo
+lp
+cka
+*.exe
+
+# Test and coverage artifacts
+*.test
+*.out
+coverage.txt
+
+# Runtime state and progress
+.algo/
+*/.algo/
+.lp/
+*/.lp/
+.cka/
+*/.cka/
+cka-exam-report-*.md
+*/cka-exam-report-*.md
+
+# Temporary and log files
+*.log
+*.tmp
+*.swp
+*~
+
+# IDE and OS
+.DS_Store
+.idea/
+.vscode/

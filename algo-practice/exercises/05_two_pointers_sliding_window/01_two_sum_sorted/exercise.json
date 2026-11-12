@@ -1,0 +1,21 @@
+{
+  "id": "twopointers_01_two_sum_sorted",
+  "name": "Two Sum (Sorted Array)",
+  "track": "Two Pointers & Sliding Window",
+  "track_order": 5,
+  "order": 1,
+  "difficulty": "Easy",
+  "description": "Given a 1-indexed sorted array of integers `numbers` and a target integer `target`, find two numbers such that they add up to `target`.\n\nReturn the indices of the two numbers, [index1, index2], as a 1-indexed integer slice of length 2.\n\nYour solution must use only O(1) auxiliary space.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(1) auxiliary space"
+  },
+  "forbidden": [],
+  "entry_file": "two_sum_sorted.go",
+  "test_file": "two_sum_sorted_test.go",
+  "hints": [
+    "Because the array is sorted, you can use two pointers: `left := 0` and `right := len(numbers) - 1`.",
+    "Calculate sum := numbers[left] + numbers[right].",
+    "If sum == target, return []int{left+1, right+1} (1-indexed). If sum < target, increment left. If sum > target, decrement right."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "linked_list_03_merge_two_sorted",
+  "name": "Merge Two Sorted Lists",
+  "track": "Linked Lists",
+  "track_order": 2,
+  "order": 3,
+  "difficulty": "Easy",
+  "description": "Merge two sorted linked lists into one sorted list.\n\nThe list should be made by splicing together the nodes of the first two lists. Return the head of the merged linked list.",
+  "complexity": {
+    "time": "O(N + M)",
+    "space": "O(1) auxiliary space"
+  },
+  "forbidden": [],
+  "entry_file": "merge_two_sorted.go",
+  "test_file": "merge_two_sorted_test.go",
+  "hints": [
+    "Use a dummy node (`dummy := &ListNode{}`) to simplify edge cases with the head.",
+    "Maintain a pointer `tail := dummy`. Compare `list1.Val` and `list2.Val`, point `tail.Next` to the smaller one, and advance that list's pointer.",
+    "When one list runs out, attach the non-nil remainder directly (`tail.Next = list1` or `list2`). Return `dummy.Next`."
+  ]
+}

@@ -1,0 +1,12 @@
+id: trouble-02-worker-kubelet
+title: Troubleshoot Worker Node in NotReady Status
+domain: Troubleshooting
+difficulty: Hard
+weight: 8
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Check the node status with `kubectl get nodes` to find which worker node is `NotReady`."
+  - "Inspect the node condition events: `kubectl describe node <worker-node>`."
+  - "Access the worker node (`docker exec -it <worker-node> bash`) and check kubelet service: `systemctl status kubelet`."
+  - "Start or enable the service: `systemctl start kubelet` and ensure `/etc/kubernetes/kubelet.conf` is valid."

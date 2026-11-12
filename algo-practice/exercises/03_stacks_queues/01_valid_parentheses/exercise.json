@@ -1,0 +1,21 @@
+{
+  "id": "stack_01_valid_parentheses",
+  "name": "Valid Parentheses",
+  "track": "Stacks & Queues",
+  "track_order": 3,
+  "order": 1,
+  "difficulty": "Easy",
+  "description": "Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.\n\nAn input string is valid if:\n1. Open brackets must be closed by the same type of brackets.\n2. Open brackets must be closed in the correct order.\n3. Every close bracket has a corresponding open bracket of the same type.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(N)"
+  },
+  "forbidden": [],
+  "entry_file": "valid_parentheses.go",
+  "test_file": "valid_parentheses_test.go",
+  "hints": [
+    "Use a slice as a stack to keep track of expected matching closing brackets or unmatched opening brackets.",
+    "When encountering an opening bracket '(', '{', '[', push the corresponding closing bracket ')', '}', ']' onto the stack.",
+    "When encountering a closing bracket, check if the stack is non-empty and if the top of the stack matches. If not, return false. At the end, return len(stack) == 0."
+  ]
+}

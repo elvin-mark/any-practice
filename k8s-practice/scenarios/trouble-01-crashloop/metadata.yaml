@@ -1,0 +1,11 @@
+id: trouble-01-crashloop
+title: Troubleshoot Application Stuck in CrashLoopBackOff
+domain: Troubleshooting
+difficulty: Medium
+weight: 7
+targetContext: kind-cka-cluster-1
+targetNamespace: finance
+hints:
+  - "Inspect pod status and failure events with `kubectl describe pod -l app=order-service -n finance`."
+  - "View previous container termination logs using `kubectl logs -l app=order-service -n finance --previous`."
+  - "Edit the deployment with `kubectl edit deployment order-service -n finance` to fix the startup command."

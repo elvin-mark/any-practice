@@ -1,0 +1,11 @@
+id: trouble-04-endpoints
+title: Troubleshoot Service Missing Endpoints
+domain: Troubleshooting
+difficulty: Easy
+weight: 7
+targetContext: kind-cka-cluster-1
+targetNamespace: security
+hints:
+  - "Check the Service endpoints with `kubectl get endpoints auth-api -n security`."
+  - "Compare the Service's `selector` (`kubectl describe svc auth-api -n security`) with the labels on the deployment pods (`kubectl get pods -n security --show-labels`)."
+  - "Update the Service selector to match the actual pod labels."

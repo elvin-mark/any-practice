@@ -1,0 +1,10 @@
+id: net-02-clusterip-nodeport
+title: Expose Deployment via NodePort Service
+domain: Services & Networking
+difficulty: Easy
+weight: 4
+targetContext: kind-cka-cluster-1
+targetNamespace: web-apps
+hints:
+  - "Use `kubectl expose deployment front-web --type=NodePort --name=front-web-svc --port=80 --target-port=80` or write a YAML manifest."
+  - "If specifying an exact nodePort (30080), edit the YAML to set `ports[0].nodePort: 30080`."

@@ -1,0 +1,21 @@
+{
+  "id": "twopointers_02_maximum_subarray",
+  "name": "Maximum Subarray (Kadane's Algorithm)",
+  "track": "Two Pointers & Sliding Window",
+  "track_order": 5,
+  "order": 2,
+  "difficulty": "Medium",
+  "description": "Given an integer array `nums`, find the subarray with the largest sum, and return its sum.\n\nKadane's Algorithm solves this problem in linear time O(N) by calculating the maximum subarray ending at each position.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(1) auxiliary space"
+  },
+  "forbidden": [],
+  "entry_file": "maximum_subarray.go",
+  "test_file": "maximum_subarray_test.go",
+  "hints": [
+    "Maintain two variables: `maxSoFar := nums[0]` and `currentMax := nums[0]`.",
+    "For each subsequent number `x` in nums[1:], `currentMax = max(x, currentMax + x)`.",
+    "Then update `maxSoFar = max(maxSoFar, currentMax)`. Return `maxSoFar`."
+  ]
+}

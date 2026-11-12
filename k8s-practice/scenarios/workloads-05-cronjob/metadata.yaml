@@ -1,0 +1,11 @@
+id: workloads-05-cronjob
+title: Create a Batch CronJob with Limits
+domain: Workloads & Scheduling
+difficulty: Easy
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: batch-jobs
+hints:
+  - "Use `kubectl create cronjob report-runner --image=busybox:1.36 --schedule='*/15 * * * *' --namespace=batch-jobs --dry-run=client -o yaml`."
+  - "Add `successfulJobsHistoryLimit: 3` and `failedJobsHistoryLimit: 1` under `spec`."
+  - "Under `spec.jobTemplate.spec`, add `backoffLimit: 2` and container command."

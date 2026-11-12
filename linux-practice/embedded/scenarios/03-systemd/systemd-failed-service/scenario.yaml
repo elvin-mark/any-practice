@@ -1,0 +1,20 @@
+id: systemd-failed-service
+title: Troubleshoot Failing Systemd Service
+track: systemd
+difficulty: intermediate
+description: |
+  The service 'data-worker.service' is failing to start on boot.
+  Inspect the systemd logs using journalctl and systemctl status to diagnose the root cause,
+  resolve the issue, and ensure the service is active (running).
+tags: [systemd, journalctl, systemctl, permissions]
+estimated_minutes: 8
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "Check the status: 'sudo systemctl status data-worker.service'"
+  - "Read recent error logs: 'sudo journalctl -u data-worker.service -e --no-pager'"
+  - "Notice if the WorkingDirectory (/var/data/worker) is missing or unreadable by student."
+  - "Create the directory 'sudo mkdir -p /var/data/worker' and grant ownership: 'sudo chown -R student:student /var/data/worker'."
+  - "Restart the service: 'sudo systemctl restart data-worker.service'."

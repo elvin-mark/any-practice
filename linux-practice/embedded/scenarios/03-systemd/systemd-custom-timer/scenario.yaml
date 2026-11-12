@@ -1,0 +1,22 @@
+id: systemd-custom-timer
+title: Create a Systemd Periodic Timer Unit
+track: systemd
+difficulty: intermediate
+description: |
+  Replace a legacy cron script by creating a native systemd timer.
+  1. A service unit already exists at /etc/systemd/system/backup-report.service (or you can verify it).
+  2. Create a timer unit named /etc/systemd/system/backup-report.timer.
+  3. Configure the timer to trigger backup-report.service every 15 minutes (e.g. OnCalendar=*:0/15 or OnCalendar=*:00,15,30,45).
+  4. Enable and start the timer unit so it runs automatically.
+tags: [systemd, timers, cron, automation]
+estimated_minutes: 10
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "The timer unit should be at /etc/systemd/system/backup-report.timer."
+  - "Include a [Timer] section with 'OnCalendar=*:0/15' and 'Persistent=true'."
+  - "Include an [Install] section with 'WantedBy=timers.target'."
+  - "Run 'sudo systemctl daemon-reload' then 'sudo systemctl enable --now backup-report.timer'."
+  - "Check with 'sudo systemctl list-timers'."

@@ -1,0 +1,24 @@
+{
+  "id": "sorting_01_bubble_sort",
+  "name": "Bubble Sort",
+  "track": "Sorting & Searching",
+  "track_order": 1,
+  "order": 1,
+  "difficulty": "Easy",
+  "description": "Implement Bubble Sort to sort an integer slice in ascending order in-place.\n\nBubble sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted.",
+  "complexity": {
+    "time": "O(N^2) worst/average, O(N) best case with early exit",
+    "space": "O(1) auxiliary (in-place)"
+  },
+  "forbidden": [
+    "sort",
+    "slices"
+  ],
+  "entry_file": "bubble_sort.go",
+  "test_file": "bubble_sort_test.go",
+  "hints": [
+    "Use two nested loops: an outer loop iterating up to N-1 times, and an inner loop comparing adjacent elements arr[j] and arr[j+1].",
+    "After the i-th pass, the largest i elements have 'bubbled' to the end, so the inner loop only needs to run up to N-i-1.",
+    "Optimization: track whether any swaps occurred during a pass with a boolean flag `swapped`. If no swaps occurred, the slice is already sorted and you can return early!"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "tree_02_invert_binary_tree",
+  "name": "Invert Binary Tree",
+  "track": "Trees",
+  "track_order": 4,
+  "order": 2,
+  "difficulty": "Easy",
+  "description": "Given the root of a binary tree, invert the tree (create its mirror image), and return its root.\n\nEvery node's left child becomes its right child and vice versa.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(H) where H is the height of the tree"
+  },
+  "forbidden": [],
+  "entry_file": "invert_tree.go",
+  "test_file": "invert_tree_test.go",
+  "hints": [
+    "Base case: if root == nil, return nil.",
+    "Swap the left and right children of root: `root.Left, root.Right = root.Right, root.Left`.",
+    "Recursively call InvertTree on both children, and return root."
+  ]
+}

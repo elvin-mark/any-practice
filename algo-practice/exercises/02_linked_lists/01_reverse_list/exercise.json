@@ -1,0 +1,21 @@
+{
+  "id": "linked_list_01_reverse",
+  "name": "Reverse Linked List",
+  "track": "Linked Lists",
+  "track_order": 2,
+  "order": 1,
+  "difficulty": "Easy",
+  "description": "Reverse a singly linked list in-place.\n\nGiven the `head` of a singly linked list, reverse the list and return the new head pointer.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(1) auxiliary space"
+  },
+  "forbidden": [],
+  "entry_file": "reverse_list.go",
+  "test_file": "reverse_list_test.go",
+  "hints": [
+    "Keep three pointers: `prev` (initially nil), `curr` (initially head), and `next`.",
+    "Before changing curr.Next, save it to `next = curr.Next` so you don't lose the remainder of the list.",
+    "Set `curr.Next = prev`, then shift both pointers forward: `prev = curr`, `curr = next`. Repeat until curr == nil. Return prev."
+  ]
+}

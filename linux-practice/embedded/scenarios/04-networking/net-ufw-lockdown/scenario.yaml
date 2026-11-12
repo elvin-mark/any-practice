@@ -1,0 +1,22 @@
+id: net-ufw-lockdown
+title: Configure Host Firewall with UFW
+track: networking
+difficulty: intermediate
+description: |
+  Lock down the server's network perimeter using UFW (Uncomplicated Firewall):
+  1. Set the default incoming policy to DENY.
+  2. Set the default outgoing policy to ALLOW.
+  3. Allow incoming SSH connections on port 22/tcp.
+  4. Allow incoming HTTP traffic on port 80/tcp.
+  5. Enable the UFW firewall so it is active and enabled on system startup.
+tags: [networking, ufw, firewall, security, iptables]
+estimated_minutes: 8
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "Reset or set defaults: 'sudo ufw default deny incoming' and 'sudo ufw default allow outgoing'."
+  - "Allow SSH and HTTP: 'sudo ufw allow 22/tcp' and 'sudo ufw allow 80/tcp' (or 'sudo ufw allow ssh', 'sudo ufw allow http')."
+  - "Enable UFW: 'echo y | sudo ufw enable'."
+  - "Check status: 'sudo ufw status verbose'."

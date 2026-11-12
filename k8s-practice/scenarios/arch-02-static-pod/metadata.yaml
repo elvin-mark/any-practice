@@ -1,0 +1,12 @@
+id: arch-02-static-pod
+title: Create a Static Pod on Control Plane Node
+domain: Cluster Architecture, Installation & Configuration
+difficulty: Medium
+weight: 6
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Static pod manifests reside in `/etc/kubernetes/manifests/` on the control plane node."
+  - "To access the Kind control plane node, run: `docker exec -it <control-plane-node-name> sh`"
+  - "Generate the YAML quickly using: `kubectl run my-static-web --image=nginx:1.25-alpine --dry-run=client -o yaml`"
+  - "Once placed in `/etc/kubernetes/manifests/my-static-web.yaml`, kubelet will automatically start the pod within a few seconds."

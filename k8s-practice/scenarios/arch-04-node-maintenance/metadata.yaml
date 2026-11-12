@@ -1,0 +1,11 @@
+id: arch-04-node-maintenance
+title: Safely Drain and Maintain a Cluster Node
+domain: Cluster Architecture, Installation & Configuration
+difficulty: Medium
+weight: 6
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Use `kubectl drain <node-name> --ignore-daemonsets --delete-emptydir-data --force` to safely drain a node."
+  - "Check node scheduling status with `kubectl get nodes`."
+  - "After maintenance inspection, return the node to service using `kubectl uncordon <node-name>`."

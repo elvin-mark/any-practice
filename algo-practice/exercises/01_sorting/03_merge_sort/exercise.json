@@ -1,0 +1,24 @@
+{
+  "id": "sorting_03_merge_sort",
+  "name": "Merge Sort",
+  "track": "Sorting & Searching",
+  "track_order": 1,
+  "order": 3,
+  "difficulty": "Medium",
+  "description": "Implement Merge Sort to sort an integer slice in ascending order.\n\nMerge Sort is a classic divide-and-conquer algorithm. It divides the input slice into two halves, recursively sorts them, and then merges the two sorted halves.",
+  "complexity": {
+    "time": "O(N log N) guaranteed in all cases",
+    "space": "O(N) auxiliary space"
+  },
+  "forbidden": [
+    "sort",
+    "slices"
+  ],
+  "entry_file": "merge_sort.go",
+  "test_file": "merge_sort_test.go",
+  "hints": [
+    "Base case: if len(arr) <= 1, it is already sorted, return arr.",
+    "Divide: find mid := len(arr)/2. Recursively sort the left half (arr[:mid]) and right half (arr[mid:]).",
+    "Conquer / Merge: merge two sorted slices into a single sorted slice by comparing front elements with two pointers i and j."
+  ]
+}

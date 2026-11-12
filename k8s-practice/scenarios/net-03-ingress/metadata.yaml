@@ -1,0 +1,11 @@
+id: net-03-ingress
+title: Configure Ingress with Path-Based Routing
+domain: Services & Networking
+difficulty: Medium
+weight: 5
+targetContext: kind-cka-cluster-1
+targetNamespace: ecommerce
+hints:
+  - "Use `kubectl create ingress --help` to check syntax or create via YAML."
+  - "Specify `pathType: Prefix` for both paths."
+  - "Ensure `backend.service.name` and `backend.service.port.number: 80` are correctly structured under `networking.k8s.io/v1`."

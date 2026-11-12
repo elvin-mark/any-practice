@@ -1,0 +1,18 @@
+id: perm-suid-cleanup
+title: Audit and Remediate Dangerous SUID File
+track: permissions
+difficulty: beginner
+description: |
+  A recent security audit reported that a sensitive maintenance script in /usr/local/bin
+  has inappropriate SUID root and world-writable permissions, exposing a privilege escalation risk.
+  Locate the insecure file, revoke world-write permissions, and remove the SUID bit so it cannot run as root.
+tags: [permissions, chmod, suid, audit]
+estimated_minutes: 5
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "Use 'find /usr/local/bin -perm /4000' or 'ls -l /usr/local/bin' to identify SUID binaries."
+  - "Look for 'backup-tool' and examine its permission bits."
+  - "Use 'sudo chmod u-s,o-w /usr/local/bin/backup-tool' or 'sudo chmod 0755 /usr/local/bin/backup-tool' to fix permissions."

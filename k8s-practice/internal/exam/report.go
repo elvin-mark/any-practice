@@ -1,0 +1,155 @@
+package exam
+
+import (
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"github.com/elvin-mark/k8s-practice/internal/ui"
+)
+
+const PassingPercentage = 66.0
+
+// DomainScore aggregates score for an exam domain
+type DomainScore struct {
+	TotalWeight  int
+	EarnedWeight int
+}
+
+// GenerateScoreReport computes totals and prints terminal summary & markdown file
+func GenerateScoreReport(s *Session) (string, error) {
+	totalEarned := 0
+	totalPossible := 0
+	domainScores := make(map[string]*DomainScore)
+
+	for _, qs := range s.Scores {
+		totalPossible += qs.Weight
+		totalEarned += qs.Earned
+
+		if _, ok := domainScores[qs.Domain]; !ok {
+			domainScores[qs.Domain] = &DomainScore{}
+		}
+		domainScores[qs.Domain].TotalWeight += qs.Weight
+		domainScores[qs.Domain].EarnedWeight += qs.Earned
+	}
+
+	percentage := 0.0
+	if totalPossible > 0 {
+		percentage = (float64(totalEarned) / float64(totalPossible)) * 100.0
+	}
+	passed := percentage >= PassingPercentage
+
+	// Print Terminal Summary
+	ui.PrintHeader("CKA SIMULATOR SCORE REPORT")
+	fmt.Printf("\nExam Duration: %d minutes\n", s.DurationMinutes)
+	fmt.Printf("Questions Attempted: %d / %d\n", countAttempted(s), len(s.ExamQuestions))
+	fmt.Printf("Total Score: %d / %d points (%0.1f%%)\n\n", totalEarned, totalPossible, percentage)
+
+	if passed {
+		fmt.Println(ui.GreenBold("★ ★ ★ CONGRATULATIONS! YOU PASSED THE CKA SIMULATOR! ★ ★ ★"))
+		fmt.Printf("Your score of %0.1f%% exceeds the 66%% pass threshold.\n\n", percentage)
+	} else {
+		fmt.Println(ui.RedBold("✖ DID NOT PASS (Threshold: 66%)"))
+		fmt.Printf("Your score was %0.1f%%. Review domain breakdowns below for areas to practice.\n\n", percentage)
+	}
+
+	// Domain Breakdown Table
+	fmt.Println(ui.CyanBold("DOMAIN BREAKDOWN:"))
+	fmt.Printf("%-50s %-12s %-10s\n", "Domain", "Score", "Percentage")
+	fmt.Println(strings.Repeat("─", 74))
+
+	for domain, dScore := range domainScores {
+		dPct := 0.0
+		if dScore.TotalWeight > 0 {
+			dPct = (float64(dScore.EarnedWeight) / float64(dScore.TotalWeight)) * 100.0
+		}
+		scoreStr := fmt.Sprintf("%d / %d pts", dScore.EarnedWeight, dScore.TotalWeight)
+		pctStr := fmt.Sprintf("%0.1f%%", dPct)
+		if dPct >= PassingPercentage {
+			pctStr = ui.GreenBold(pctStr)
+		} else {
+			pctStr = ui.RedBold(pctStr)
+		}
+		fmt.Printf("%-50s %-12s %-10s\n", domain, scoreStr, pctStr)
+	}
+	fmt.Println(strings.Repeat("─", 74))
+
+	// Question by question list
+	fmt.Println("\n" + ui.CyanBold("QUESTION RESULTS:"))
+	for idx, qID := range s.ExamQuestions {
+		qs := s.Scores[qID]
+		statusStr := ui.RedBold("FAIL")
+		if qs.Passed {
+			statusStr = ui.GreenBold("PASS")
+		}
+		fmt.Printf("Q%-2d  %-30s  Weight: %2d pts  Earned: %2d pts  [%s]\n",
+			idx+1, qID, qs.Weight, qs.Earned, statusStr)
+	}
+
+	// Generate Markdown report
+	timestamp := time.Now().Format("2006-01-02-150405")
+	reportFileName := fmt.Sprintf("cka-exam-report-%s.md", timestamp)
+	mdContent := buildMarkdownReport(s, totalEarned, totalPossible, percentage, passed, domainScores)
+	if err := os.WriteFile(reportFileName, []byte(mdContent), 0644); err == nil {
+		absPath, _ := filepath.Abs(reportFileName)
+		ui.PrintSuccess("Detailed report saved to: %s", absPath)
+		return absPath, nil
+	}
+
+	return "", nil
+}
+
+func countAttempted(s *Session) int {
+	count := 0
+	for _, qs := range s.Scores {
+		if qs.Attempted {
+			count++
+		}
+	}
+	return count
+}
+
+func buildMarkdownReport(s *Session, earned, total int, pct float64, passed bool, domainScores map[string]*DomainScore) string {
+	var sb strings.Builder
+	sb.WriteString("# CKA Mock Exam Score Report\n\n")
+	sb.WriteString(fmt.Sprintf("- **Date:** %s\n", time.Now().Format(time.RFC1123)))
+	sb.WriteString(fmt.Sprintf("- **Duration:** %d minutes\n", s.DurationMinutes))
+	sb.WriteString(fmt.Sprintf("- **Result:** %s\n", map[bool]string{true: "**PASSED**", false: "**FAILED**"}[passed]))
+	sb.WriteString(fmt.Sprintf("- **Score:** %d / %d points (**%0.1f%%**)\n", earned, total, pct))
+	sb.WriteString(fmt.Sprintf("- **Passing Threshold:** %0.1f%%\n\n", PassingPercentage))
+
+	sb.WriteString("## Domain Breakdown\n\n")
+	sb.WriteString("| Domain | Score | Percentage | Status |\n")
+	sb.WriteString("|---|---|---|---|\n")
+
+	for domain, ds := range domainScores {
+		dPct := 0.0
+		if ds.TotalWeight > 0 {
+			dPct = (float64(ds.EarnedWeight) / float64(ds.TotalWeight)) * 100.0
+		}
+		status := "NEEDS REVIEW"
+		if dPct >= PassingPercentage {
+			status = "PASSED"
+		}
+		sb.WriteString(fmt.Sprintf("| %s | %d / %d | %0.1f%% | %s |\n", domain, ds.EarnedWeight, ds.TotalWeight, dPct, status))
+	}
+
+	sb.WriteString("\n## Question Details\n\n")
+	sb.WriteString("| # | Scenario ID | Domain | Points | Earned | Status |\n")
+	sb.WriteString("|---|---|---|---|---|---|\n")
+
+	for idx, qID := range s.ExamQuestions {
+		qs := s.Scores[qID]
+		status := "FAIL"
+		if qs.Passed {
+			status = "PASS"
+		}
+		sb.WriteString(fmt.Sprintf("| %d | `%s` | %s | %d | %d | %s |\n",
+			idx+1, qID, qs.Domain, qs.Weight, qs.Earned, status))
+	}
+
+	sb.WriteString("\n---\n*Report generated by CKA Interactive Mock Simulator*\n")
+	return sb.String()
+}

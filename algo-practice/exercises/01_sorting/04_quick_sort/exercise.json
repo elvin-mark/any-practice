@@ -1,0 +1,24 @@
+{
+  "id": "sorting_04_quick_sort",
+  "name": "Quick Sort",
+  "track": "Sorting & Searching",
+  "track_order": 1,
+  "order": 4,
+  "difficulty": "Medium",
+  "description": "Implement Quick Sort in-place using partitioning (Lomuto or Hoare).\n\nQuick Sort selects a 'pivot' element from the array and partitions the other elements into two sub-arrays, according to whether they are less than or greater than the pivot. The sub-arrays are then sorted recursively.",
+  "complexity": {
+    "time": "O(N log N) average, O(N^2) worst case",
+    "space": "O(log N) stack space (in-place partitioning)"
+  },
+  "forbidden": [
+    "sort",
+    "slices"
+  ],
+  "entry_file": "quick_sort.go",
+  "test_file": "quick_sort_test.go",
+  "hints": [
+    "Write a recursive helper `quickSort(arr, low, high)`. Base case: when low >= high, return.",
+    "Partition logic: pick arr[high] as pivot. Maintain pointer `i = low`. For j from low to high-1, if arr[j] < pivot, swap arr[i] with arr[j] and increment i.",
+    "Finally swap arr[i] with arr[high] so the pivot is in its correct sorted position. Recursively call quickSort on (low, i-1) and (i+1, high)."
+  ]
+}

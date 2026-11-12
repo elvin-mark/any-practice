@@ -1,0 +1,18 @@
+id: user-sudo-syntax
+title: Fix Broken Sudoers File Syntax
+track: users
+difficulty: beginner
+description: |
+  A junior sysadmin edited /etc/sudoers.d/devops without validating the syntax using visudo,
+  introducing a typo that produces parse errors whenever sudo is invoked.
+  Identify and correct the syntax error so that members of group 'devops' have passwordless sudo.
+tags: [sudo, visudo, users, security]
+estimated_minutes: 5
+author: Antigravity Team
+container:
+  image: "linux-practice-ubuntu:24.04"
+  privileged: true
+hints:
+  - "Run 'sudo visudo -cf /etc/sudoers.d/devops' to test the configuration syntax."
+  - "Examine the file '/etc/sudoers.d/devops' for typos in sudo directives (e.g. NOPASSWD)."
+  - "Edit the file using a text editor (or 'sudo visudo -f /etc/sudoers.d/devops') and fix the spelling."

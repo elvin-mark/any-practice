@@ -1,0 +1,12 @@
+id: arch-03-etcd-backup
+title: Take an etcd Snapshot Backup on Control Plane
+domain: Cluster Architecture, Installation & Configuration
+difficulty: Hard
+weight: 7
+targetContext: kind-cka-cluster-1
+targetNamespace: kube-system
+hints:
+  - "Log into the control plane node with `docker exec -it <control-plane-container> bash`."
+  - "The etcd static pod manifest at `/etc/kubernetes/manifests/etcd.yaml` reveals endpoint and certificate paths."
+  - "Required flags: `--cacert`, `--cert`, `--key`, and `--endpoints=https://127.0.0.1:2379`."
+  - "Ensure `ETCDCTL_API=3` is set when running `etcdctl snapshot save`."

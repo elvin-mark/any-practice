@@ -1,0 +1,11 @@
+id: workloads-01-multi-container
+title: Deploy a Multi-Container Pod with Shared Volume
+domain: Workloads & Scheduling
+difficulty: Easy
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Define an `emptyDir: {}` volume under `spec.volumes`."
+  - "Mount the volume in both containers under `spec.containers[*].volumeMounts`."
+  - "The primary container writes to `/var/log/app.log`, the sidecar container reads from the same mount path."

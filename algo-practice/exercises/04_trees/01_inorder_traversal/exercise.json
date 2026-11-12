@@ -1,0 +1,21 @@
+{
+  "id": "tree_01_inorder_traversal",
+  "name": "Binary Tree In-Order Traversal",
+  "track": "Trees",
+  "track_order": 4,
+  "order": 1,
+  "difficulty": "Easy",
+  "description": "Given the root of a binary tree, return the in-order traversal of its nodes' values.\n\nIn an in-order traversal, the left subtree is visited first, then the root node, and finally the right subtree.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(N) for recursion stack / output"
+  },
+  "forbidden": [],
+  "entry_file": "inorder_traversal.go",
+  "test_file": "inorder_traversal_test.go",
+  "hints": [
+    "In-order order is: Left -> Root -> Right.",
+    "A helper function `traverse(node *TreeNode)` with recursion is the most natural approach.",
+    "Base case: if node is nil, return. Otherwise, traverse(node.Left), record node.Val, traverse(node.Right)."
+  ]
+}

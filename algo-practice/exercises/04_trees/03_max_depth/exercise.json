@@ -1,0 +1,21 @@
+{
+  "id": "tree_03_max_depth",
+  "name": "Maximum Depth of Binary Tree",
+  "track": "Trees",
+  "track_order": 4,
+  "order": 3,
+  "difficulty": "Easy",
+  "description": "Given the root of a binary tree, return its maximum depth.\n\nA binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(H) recursion stack"
+  },
+  "forbidden": [],
+  "entry_file": "max_depth.go",
+  "test_file": "max_depth_test.go",
+  "hints": [
+    "Base case: if root == nil, depth is 0.",
+    "Recursively find the max depth of the left subtree and right subtree.",
+    "The depth of the current tree is 1 + max(leftDepth, rightDepth)."
+  ]
+}

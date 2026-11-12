@@ -1,0 +1,11 @@
+id: net-01-networkpolicy
+title: Restrict Ingress Traffic with NetworkPolicy
+domain: Services & Networking
+difficulty: Hard
+weight: 7
+targetContext: kind-cka-cluster-1
+targetNamespace: secure-zone
+hints:
+  - "Use `podSelector` under `spec` to match the target pod (`role=db`)."
+  - "Under `spec.ingress`, define `from` with `podSelector.matchLabels: {role: backend}`."
+  - "Specify `ports` with `protocol: TCP` and `port: 80` (or the database listening port)."

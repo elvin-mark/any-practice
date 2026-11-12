@@ -1,0 +1,12 @@
+id: storage-03-storageclass
+title: Create a Custom StorageClass
+domain: Storage
+difficulty: Easy
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "StorageClass is cluster-scoped: `apiVersion: storage.k8s.io/v1`, `kind: StorageClass`."
+  - "Set `reclaimPolicy: Retain`."
+  - "Set `volumeBindingMode: WaitForFirstConsumer`."
+  - "Set `allowVolumeExpansion: true`."

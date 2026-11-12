@@ -1,0 +1,11 @@
+id: workloads-04-daemonset
+title: Deploy a Cluster-Wide DaemonSet with Tolerations
+domain: Workloads & Scheduling
+difficulty: Medium
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Kind control plane nodes have the taint `node-role.kubernetes.io/control-plane:NoSchedule`."
+  - "To schedule DaemonSet pods on all nodes including the control plane, add a toleration with `operator: Exists` or matching the control-plane taint."
+  - "Check pod distribution across nodes with `kubectl get pods -o wide -l app=node-monitor`."

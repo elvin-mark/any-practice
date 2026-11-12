@@ -1,0 +1,11 @@
+id: net-04-coredns-troubleshoot
+title: Troubleshoot Cluster DNS Resolution Failure
+domain: Services & Networking
+difficulty: Medium
+weight: 4
+targetContext: kind-cka-cluster-1
+targetNamespace: kube-system
+hints:
+  - "Check the health and replica count of DNS pods in `kube-system`: `kubectl get pods -n kube-system -l k8s-app=kube-dns`."
+  - "Inspect the CoreDNS deployment: `kubectl get deploy coredns -n kube-system`."
+  - "If scaled down, scale it back up with `kubectl scale deployment coredns -n kube-system --replicas=2`."

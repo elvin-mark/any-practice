@@ -1,0 +1,11 @@
+id: workloads-02-node-affinity
+title: Schedule Workload Using Node Affinity
+domain: Workloads & Scheduling
+difficulty: Medium
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Label the worker node using: `kubectl label node <node-name> disktype=ssd`."
+  - "In the Deployment pod template spec, configure `affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution`."
+  - "Use `nodeSelectorTerms` with `matchExpressions` checking `key: disktype`, `operator: In`, and `values: [ssd]`."

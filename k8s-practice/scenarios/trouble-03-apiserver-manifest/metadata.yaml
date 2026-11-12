@@ -1,0 +1,12 @@
+id: trouble-03-apiserver-manifest
+title: Troubleshoot Control Plane Static Pod Failure
+domain: Troubleshooting
+difficulty: Hard
+weight: 8
+targetContext: kind-cka-cluster-1
+targetNamespace: kube-system
+hints:
+  - "Control plane static pod definitions are located in `/etc/kubernetes/manifests/` on the control plane node."
+  - "Access the control plane node: `docker exec -it <control-plane-container> bash`."
+  - "Look for recently modified or failing static pod manifests such as `/etc/kubernetes/manifests/infra-agent.yaml`."
+  - "Fix syntax or invalid command arguments in the manifest file."

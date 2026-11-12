@@ -1,0 +1,21 @@
+{
+  "id": "stack_02_min_stack",
+  "name": "Min Stack",
+  "track": "Stacks & Queues",
+  "track_order": 3,
+  "order": 2,
+  "difficulty": "Medium",
+  "description": "Design a stack that supports push, pop, top, and retrieving the minimum element in constant O(1) time.\n\nImplement the `MinStack` struct:\n- `Push(val int)`: Pushes the element val onto the stack.\n- `Pop()`: Removes the element on the top of the stack.\n- `Top() int`: Gets the top element of the stack.\n- `GetMin() int`: Retrieves the minimum element in the stack.",
+  "complexity": {
+    "time": "O(1) for all operations",
+    "space": "O(N)"
+  },
+  "forbidden": [],
+  "entry_file": "min_stack.go",
+  "test_file": "min_stack_test.go",
+  "hints": [
+    "To achieve O(1) for GetMin(), you can maintain a second 'minStack' alongside your main stack.",
+    "When pushing a value `val`, also push `min(val, currentMin)` onto minStack.",
+    "When popping from the main stack, pop from minStack as well so both stacks stay in sync."
+  ]
+}

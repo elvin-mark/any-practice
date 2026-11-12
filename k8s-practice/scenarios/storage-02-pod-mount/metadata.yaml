@@ -1,0 +1,11 @@
+id: storage-02-pod-mount
+title: Mount Persistent Storage into a Pod
+domain: Storage
+difficulty: Easy
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Under `spec.volumes`, define `persistentVolumeClaim` with `claimName: storage-claim`."
+  - "Under `spec.containers[0].volumeMounts`, mount the volume at `mountPath: /opt/store`."
+  - "Use a startup command or exec into the pod to write `cka-practice-success` to `/opt/store/status.txt`."

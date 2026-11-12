@@ -1,0 +1,21 @@
+{
+  "id": "linked_list_02_detect_cycle",
+  "name": "Detect Cycle (Floyd's Algorithm)",
+  "track": "Linked Lists",
+  "track_order": 2,
+  "order": 2,
+  "difficulty": "Easy",
+  "description": "Determine if a linked list contains a cycle using Floyd's Tortoise and Hare algorithm.\n\nReturn true if there is a cycle in the linked list, or false otherwise. Can you solve it using O(1) memory?",
+  "complexity": {
+    "time": "O(N)",
+    "space": "O(1) auxiliary space"
+  },
+  "forbidden": [],
+  "entry_file": "detect_cycle.go",
+  "test_file": "detect_cycle_test.go",
+  "hints": [
+    "Use two pointers moving at different speeds through the list: `slow` moves 1 step, `fast` moves 2 steps.",
+    "If the list has no cycle, `fast` (or `fast.Next`) will reach nil.",
+    "If the list contains a cycle, the fast pointer will eventually lap the slow pointer and they will be identical (`slow == fast`)."
+  ]
+}

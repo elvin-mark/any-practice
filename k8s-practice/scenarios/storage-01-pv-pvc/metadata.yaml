@@ -1,0 +1,11 @@
+id: storage-01-pv-pvc
+title: Create PersistentVolume and PersistentVolumeClaim
+domain: Storage
+difficulty: Easy
+weight: 4
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "PersistentVolumes are cluster-scoped, while PersistentVolumeClaims are namespace-scoped."
+  - "Ensure `storageClassName: manual` matches between both the PV and the PVC."
+  - "Ensure capacity in the PV (1Gi) meets or exceeds the PVC request (1Gi)."

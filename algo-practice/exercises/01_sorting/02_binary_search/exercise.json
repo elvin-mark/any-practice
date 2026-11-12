@@ -1,0 +1,24 @@
+{
+  "id": "sorting_02_binary_search",
+  "name": "Binary Search",
+  "track": "Sorting & Searching",
+  "track_order": 1,
+  "order": 2,
+  "difficulty": "Easy",
+  "description": "Implement Binary Search on a sorted integer slice.\n\nGiven a sorted slice `arr` and a target integer `target`, return the 0-based index of `target` if it exists in `arr`. If the target is not present, return -1.\n\nYour solution must run in logarithmic time.",
+  "complexity": {
+    "time": "O(log N)",
+    "space": "O(1) auxiliary"
+  },
+  "forbidden": [
+    "sort.Search",
+    "slices.BinarySearch"
+  ],
+  "entry_file": "binary_search.go",
+  "test_file": "binary_search_test.go",
+  "hints": [
+    "Maintain two pointers `low` and `high` marking the active search boundary (initially 0 and len(arr)-1).",
+    "Calculate the middle index with `mid := low + (high-low)/2` to avoid integer overflow.",
+    "If arr[mid] == target, return mid. If arr[mid] < target, narrow to the right half (low = mid + 1). Otherwise, narrow to the left half (high = mid - 1). Loop while low <= high."
+  ]
+}

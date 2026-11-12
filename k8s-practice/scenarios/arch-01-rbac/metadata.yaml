@@ -1,0 +1,11 @@
+id: arch-01-rbac
+title: Configure RBAC for Developer Role
+domain: Cluster Architecture, Installation & Configuration
+difficulty: Medium
+weight: 6
+targetContext: kind-cka-cluster-1
+targetNamespace: development
+hints:
+  - "Use `kubectl create role --help` to see examples of creating roles with specific verbs and resources."
+  - "Use `kubectl create rolebinding --help` to bind the role to user `developer`."
+  - "Test permissions with `kubectl auth can-i list pods --as=developer -n development`."

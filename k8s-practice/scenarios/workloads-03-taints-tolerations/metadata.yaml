@@ -1,0 +1,10 @@
+id: workloads-03-taints-tolerations
+title: Configure Taints and Pod Tolerations
+domain: Workloads & Scheduling
+difficulty: Easy
+weight: 3
+targetContext: kind-cka-cluster-1
+targetNamespace: default
+hints:
+  - "Taint a node using: `kubectl taint nodes <node-name> tier=critical:NoSchedule`."
+  - "Under `spec.tolerations`, define `key: tier`, `operator: Equal`, `value: critical`, and `effect: NoSchedule`."
