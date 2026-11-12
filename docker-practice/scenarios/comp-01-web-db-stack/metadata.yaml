@@ -1,0 +1,10 @@
+id: comp-01-web-db-stack
+title: Multi-Tier Compose Stack with Health Dependencies
+domain: Docker Compose Orchestration
+difficulty: Medium
+weight: 7
+hints:
+  - "In docker-compose.yml, specify `services:` with `web` and `redis`."
+  - "Add a healthcheck on redis: `test: [\"CMD\", \"redis-cli\", \"ping\"], interval: 5s, timeout: 3s, retries: 3`."
+  - "Configure `web` with: `depends_on: redis: condition: service_healthy`."
+  - "Define a custom bridge network and start with `docker compose up -d`."

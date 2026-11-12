@@ -1,0 +1,9 @@
+id: trouble-01-oom-killer
+title: Diagnose and Fix OOMKilled Container
+domain: Troubleshooting & Diagnostics
+difficulty: Medium
+weight: 7
+hints:
+  - "Inspect why the container exited: `docker inspect mem-hungry --format 'ExitCode={{.State.ExitCode}} OOMKilled={{.State.OOMKilled}}'`."
+  - "Exit code 137 (128 + 9 / SIGKILL) combined with OOMKilled=true indicates the Linux kernel killed the container for exceeding its cgroup memory limit."
+  - "The workload in `mem-hungry` requires ~128MB. Increase memory limit to 256MB: `--memory=256m` and `--memory-swap=256m`."

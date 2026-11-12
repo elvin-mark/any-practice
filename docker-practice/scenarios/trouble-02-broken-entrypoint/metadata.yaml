@@ -1,0 +1,9 @@
+id: trouble-02-broken-entrypoint
+title: Fix Exec Format & Missing Shebang Entrypoint
+domain: Troubleshooting & Diagnostics
+difficulty: Medium
+weight: 6
+hints:
+  - "Exit code 127 means 'Command not found' or missing script interpreter / execution permission."
+  - "Check if `entrypoint.sh` has `chmod +x` and a valid shebang like `#!/bin/sh` or `#!/usr/bin/env sh`."
+  - "Build the image as `fixed-entrypoint:latest` and run as container `fixed-worker`."

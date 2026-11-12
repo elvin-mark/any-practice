@@ -1,0 +1,10 @@
+id: net-03-isolated-backend
+title: Multi-Tier Network Isolation (DMZ vs Backend)
+domain: Networking & Service Discovery
+difficulty: Hard
+weight: 8
+hints:
+  - "Create two networks: `docker network create frontend-net` and `docker network create backend-net`."
+  - "Connect `gateway` to `frontend-net`, then connect it to `backend-net`: `docker network connect backend-net gateway`."
+  - "Run `db` attached ONLY to `backend-net`: `docker run -d --name secure-db --network backend-net alpine:3.20 sleep 3600`."
+  - "Run `external-client` attached ONLY to `frontend-net`."

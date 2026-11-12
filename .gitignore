@@ -1,11 +1,12 @@
 # Binaries
 bin/
 */bin/
-algo
-lp
-cka
-ctf
-dockp
+/algo
+/lp
+/cka
+/ctf
+/dockp
+/gitp
 *.exe
 
 # Test and coverage artifacts
@@ -24,6 +25,8 @@ coverage.txt
 */.ctf/
 .dockp/
 */.dockp/
+.gitp/
+*/.gitp/
 cka-exam-report-*.md
 */cka-exam-report-*.md
 

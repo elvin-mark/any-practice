@@ -1,0 +1,9 @@
+id: vol-01-named-volume
+title: Persistent Storage with Named Volumes
+domain: Storage, Volumes & Persistence
+difficulty: Easy
+weight: 5
+hints:
+  - "Create volume: `docker volume create --label practice=docker db-store`."
+  - "Mount volume to container: `docker run -d --name datastore-app -v db-store:/var/lib/appdata --label practice=docker alpine:3.20 sleep 3600`."
+  - "Write verification token: `docker exec datastore-app sh -c 'echo DOCKER_PERSISTENCE_VERIFIED > /var/lib/appdata/persistent.txt'`."

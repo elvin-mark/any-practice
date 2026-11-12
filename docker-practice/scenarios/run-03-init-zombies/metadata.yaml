@@ -1,0 +1,10 @@
+id: run-03-init-zombies
+title: Fix Zombie Process Reaping with Docker Init
+domain: Container Lifecycle & Resources
+difficulty: Medium
+weight: 7
+hints:
+  - "In Linux, PID 1 has the special responsibility of reaping orphaned child processes (zombies) and forwarding signals."
+  - "Most application processes (like Node, Python, Bash) do NOT reap zombies properly when running as PID 1."
+  - "Docker provides the `--init` flag which inserts a lightweight init process (tini) as PID 1."
+  - "Run container named `init-worker` with `--init` enabled."

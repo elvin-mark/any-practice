@@ -1,0 +1,10 @@
+id: vol-02-readonly-tmpfs
+title: Hardened Read-Only Rootfs with Writable Tmpfs
+domain: Storage, Volumes & Persistence
+difficulty: Medium
+weight: 6
+hints:
+  - "Use `--read-only` flag on `docker run`."
+  - "Nginx needs writable paths for its PID, cache, and logs: add `--tmpfs /var/run --tmpfs /var/cache/nginx --tmpfs /tmp`."
+  - "Map host port 8085 to container port 80: `-p 8085:80`."
+  - "Run container named `secure-nginx` using `nginx:alpine`."

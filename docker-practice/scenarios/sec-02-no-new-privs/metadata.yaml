@@ -1,0 +1,9 @@
+id: sec-02-no-new-privs
+title: Prevent SUID Escalation with No-New-Privileges
+domain: Container Security & Hardening
+difficulty: Easy
+weight: 5
+hints:
+  - "The Linux kernel feature `PR_SET_NO_NEW_PRIVS` prevents child processes from gaining more privileges than their parent."
+  - "In Docker CLI, pass `--security-opt=no-new-privileges:true` (or `--security-opt no-new-privileges`)."
+  - "Run container named `no-escalate` with `alpine:3.20 sleep 3600`."

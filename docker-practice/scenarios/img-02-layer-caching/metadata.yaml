@@ -1,0 +1,10 @@
+id: img-02-layer-caching
+title: Optimize Dockerfile Layer Caching
+domain: Dockerfile & Image Optimization
+difficulty: Easy
+weight: 5
+hints:
+  - "Docker executes Dockerfiles sequentially from top to bottom and invalidates layer cache whenever a copied file changes."
+  - "If you run `COPY . .` before `RUN ... install`, any small code edit forces package re-download."
+  - "First copy package manifest files (`package.json`, `package-lock.json`), run package installation, and only then copy application code."
+  - "Build and tag image as `cached-app:latest`."

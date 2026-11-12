@@ -1,8 +1,8 @@
 # 🥋 Any-Practice
 
-> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), and Capture The Flag (CTF) Cybersecurity.**
+> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, and Capture The Flag (CTF) Cybersecurity.**
 
-`any-practice` brings together four specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
+`any-practice` brings together five specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
 
 ---
 
@@ -13,6 +13,7 @@
 | **`algo`** | Computer Science & Algorithms | `algo` / `algo watch` | `algo list`, `algo verify <id>` | Pure Go, AST validation, benchmarks |
 | **`lp`** | Linux Systems Administration | `lp` | `lp list`, `lp start <id>`, `lp verify` | Ubuntu 24.04 systemd containers |
 | **`cka`** | Certified Kubernetes Administrator | `cka` / `cka tui` | `cka list`, `cka practice <id>`, `cka exam` | Local Kind multi-node clusters + Calico |
+| **`dockp`** | Docker Containerization & Security | `dockp` / `dockp tui` | `dockp list`, `dockp start <id>`, `dockp verify` | Production Docker Engine & Compose |
 | **`ctf`** | Cybersecurity & Capture The Flag | `ctf` / `ctf tui` | `ctf list`, `ctf submit <id> <flag>` | Security puzzles, crypto, web, pwn, rev, forensics |
 
 ---
@@ -52,9 +53,10 @@ Binaries will be placed in `./bin/`:
 - `bin/algo`
 - `bin/lp`
 - `bin/cka`
+- `bin/dockp`
 - `bin/ctf`
 
-Run tests across all four modules:
+Run tests across all five modules:
 ```bash
 make test
 ```
@@ -137,7 +139,39 @@ Simulate the 2-hour Certified Kubernetes Administrator exam or drill individual 
 
 ---
 
-### 🚩 4. Capture The Flag Practice (`ctf`)
+### 🐳 4. Docker Practice Platform (`dockp`)
+Hands-on Docker containerization, multi-stage image optimization, networking, persistent volume pipelines, Compose stacks, and security hardening.
+
+```bash
+# Launch interactive Docker TUI browser
+./bin/dockp
+
+# Check local Docker engine prerequisites
+./bin/dockp check
+
+# List all 17 scenarios across 7 core domains
+./bin/dockp list
+
+# Start a practice scenario lab
+./bin/dockp start img-01-multistage-build
+
+# Verify solution against Docker engine
+./bin/dockp verify
+
+# View hints or official solution guide
+./bin/dockp hint
+./bin/dockp solution img-01-multistage-build
+
+# View overall progress and domain mastery
+./bin/dockp progress
+
+# Clean up practice lab containers and networks
+./bin/dockp clean
+```
+
+---
+
+### 🚩 5. Capture The Flag Practice (`ctf`)
 Interactive CTF training platform covering cryptography, web security, binary reverse engineering, stack overflows, forensics, and decoding drills.
 
 ```bash
@@ -188,6 +222,13 @@ any-practice/
 │   ├── internal/tui/           # Bubble Tea CKA scenario browser TUI
 │   ├── internal/cluster/       # Kind cluster management
 │   └── internal/exam/          # Exam timer, state, and score report generator
+├── docker-practice/            # Docker containerization & security drills
+│   ├── cmd/dockp/              # dockp CLI entrypoint
+│   ├── scenarios/              # 17 Docker scenario YAMLs, problems, setup/verify scripts
+│   ├── internal/ui/            # Unified design system & CLI table renderer
+│   ├── internal/tui/           # Bubble Tea split-pane TUI
+│   ├── internal/scenario/      # Scenario model, loader, and automated runner
+│   └── internal/progress/      # Progress tracker and scoring engine
 └── ctf-practice/               # Capture The Flag security training
     ├── cmd/ctf/                # ctf CLI entrypoint
     ├── challenges/             # Curated challenges across 6 categories

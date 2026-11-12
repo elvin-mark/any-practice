@@ -1,0 +1,11 @@
+id: img-03-security-nonroot
+title: Harden Dockerfile Non-Root User & Permissions
+domain: Dockerfile & Image Optimization
+difficulty: Medium
+weight: 6
+hints:
+  - "By default, Docker containers run as root (UID 0), creating severe security attack surfaces."
+  - "In Alpine, use `adduser -D -u 10001 -s /bin/sh secuser` to add an unprivileged user."
+  - "Ensure ownership with `chown -R secuser:secuser /app` before switching user."
+  - "Set `USER secuser` or `USER 10001` before the ENTRYPOINT/CMD."
+  - "Build and tag image as `hardened-app:latest`."

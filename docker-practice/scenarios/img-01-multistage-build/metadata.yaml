@@ -1,0 +1,10 @@
+id: img-01-multistage-build
+title: Multi-Stage Build for Minimal Go Microservice
+domain: Dockerfile & Image Optimization
+difficulty: Medium
+weight: 7
+hints:
+  - "In the builder stage, use `golang:1.23-alpine AS builder`, copy source, and compile with `CGO_ENABLED=0 GOOS=linux go build -ldflags=\"-s -w\" -o /app/server .`."
+  - "In the final runtime stage, use a minimal base like `alpine:3.20` or `scratch`."
+  - "Add a non-root user (e.g. `adduser -D -u 10001 appuser`) and switch to `USER 10001` in the final stage."
+  - "Tag the built image as `go-microservice:optimized`."

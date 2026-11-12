@@ -1,0 +1,9 @@
+id: net-02-port-binding
+title: Secure Host IP Port Binding
+domain: Networking & Service Discovery
+difficulty: Medium
+weight: 6
+hints:
+  - "By default, `-p 6379:6379` binds to `0.0.0.0` (all public network interfaces)."
+  - "To bind only to localhost / loopback, use: `-p 127.0.0.1:6379:6379`."
+  - "Run container named `internal-cache` using `redis:alpine` with label `practice=docker`."

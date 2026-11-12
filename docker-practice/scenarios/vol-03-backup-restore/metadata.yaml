@@ -1,0 +1,9 @@
+id: vol-03-backup-restore
+title: Volume Backup & Restoration Pipeline
+domain: Storage, Volumes & Persistence
+difficulty: Hard
+weight: 8
+hints:
+  - "To back up a volume, run a temporary container mounting the volume and host directory, then tar the volume contents."
+  - "Example backup command: `docker run --rm -v prod-backup-source:/volume:ro -v /tmp:/backup alpine:3.20 tar czf /backup/prod-backup.tar.gz -C /volume .`"
+  - "To restore, create new volume `prod-backup-restored` and unpack the archive with tar xzf."

@@ -1,0 +1,12 @@
+id: run-01-resource-limits
+title: Enforce CPU, Memory & Restart Policies
+domain: Container Lifecycle & Resources
+difficulty: Easy
+weight: 5
+hints:
+  - "Use `docker run -d --name prod-worker ...`"
+  - "Set memory limit: `--memory=256m` and `--memory-swap=256m` (to prevent swapping)."
+  - "Set CPU quota: `--cpus=0.5`."
+  - "Set process limit: `--pids-limit=100`."
+  - "Set restart policy: `--restart=unless-stopped`."
+  - "Attach label `--label practice=docker` and run `alpine:3.20 sleep 3600`."
