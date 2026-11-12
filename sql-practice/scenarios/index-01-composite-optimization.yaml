@@ -1,0 +1,44 @@
+id: index-01-composite-optimization
+title: "Eliminate Full Table Scan with Composite Index"
+category: Indexes
+difficulty: Medium
+description: |
+  A high-frequency endpoint queries the 'orders' table to retrieve all shipped orders
+  for a customer, sorted newest first:
+    SELECT id, customer_id, status, created_at
+    FROM orders
+    WHERE customer_id = 42 AND status = 'SHIPPED'
+    ORDER BY created_at DESC;
+
+  Currently, EXPLAIN QUERY PLAN shows:
+    SCAN orders
+  which scans every row in the table!
+goal: |
+  Write a DDL statement (`CREATE INDEX ... ON orders(...)`) to create the optimal composite
+  index so that SQLite uses an index search rather than scanning the table.
+hints:
+  - "The query filters on (customer_id, status) and orders by created_at DESC"
+  - "Run: CREATE INDEX idx_orders_cust_status ON orders(customer_id, status, created_at);"
+  - "Verification checks that EXPLAIN QUERY PLAN contains 'USING INDEX'"
+setup: |
+  CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    customer_id INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    total REAL NOT NULL
+  );
+
+  -- Seed with sample rows
+  INSERT INTO orders (customer_id, status, created_at, total) VALUES
+    (42, 'SHIPPED', '2026-01-10 10:00:00', 99.0),
+    (42, 'PENDING', '2026-01-11 12:00:00', 49.0),
+    (42, 'SHIPPED', '2026-01-12 14:00:00', 129.0),
+    (99, 'SHIPPED', '2026-01-09 09:00:00', 50.0);
+solution: |
+  SELECT id, customer_id, status, created_at
+  FROM orders
+  WHERE customer_id = 42 AND status = 'SHIPPED'
+  ORDER BY created_at DESC;
+verify_type: plan_match
+verify_plan: "USING INDEX"

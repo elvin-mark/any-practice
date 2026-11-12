@@ -7,7 +7,12 @@ bin/
 /ctf
 /dockp
 /gitp
+/sqlp
 *.exe
+
+# Databases
+*.db
+*.db-journal
 
 # Test and coverage artifacts
 *.test
@@ -27,6 +32,8 @@ coverage.txt
 */.dockp/
 .gitp/
 */.gitp/
+.sqlp/
+*/.sqlp/
 cka-exam-report-*.md
 */cka-exam-report-*.md
 

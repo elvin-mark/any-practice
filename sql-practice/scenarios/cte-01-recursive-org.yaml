@@ -1,0 +1,46 @@
+id: cte-01-recursive-org
+title: "Management Hierarchy Depth (Recursive CTE)"
+category: CTEs
+difficulty: Hard
+description: |
+  An enterprise organization chart maps who reports to whom.
+  The CEO has manager_id = NULL. Direct reports to the CEO are Level 2, and so forth.
+goal: |
+  Using a recursive Common Table Expression (`WITH RECURSIVE`), compute each employee's depth level:
+    - id
+    - name
+    - manager_id
+    - level (CEO = 1, their reports = 2, reports of reports = 3...)
+  Ordered by 'level' ASCENDING, then 'id' ASCENDING.
+hints:
+  - "Anchor member: SELECT id, name, manager_id, 1 AS level FROM employees WHERE manager_id IS NULL"
+  - "Recursive member: SELECT e.id, e.name, e.manager_id, o.level + 1 FROM employees e JOIN org o ON e.manager_id = o.id"
+  - "Final query: SELECT id, name, manager_id, level FROM org ORDER BY level ASC, id ASC"
+setup: |
+  CREATE TABLE employees (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    manager_id INTEGER
+  );
+
+  INSERT INTO employees VALUES
+    (1, 'Sarah (CEO)', NULL),
+    (2, 'Michael (VP Eng)', 1),
+    (3, 'Rachel (VP Sales)', 1),
+    (4, 'David (Staff Eng)', 2),
+    (5, 'Emily (Eng Lead)', 2),
+    (6, 'James (Senior Dev)', 5),
+    (7, 'Chloe (Account Exec)', 3);
+solution: |
+  WITH RECURSIVE org_chart AS (
+    SELECT id, name, manager_id, 1 AS level
+    FROM employees
+    WHERE manager_id IS NULL
+    UNION ALL
+    SELECT e.id, e.name, e.manager_id, o.level + 1
+    FROM employees e
+    JOIN org_chart o ON e.manager_id = o.id
+  )
+  SELECT id, name, manager_id, level
+  FROM org_chart
+  ORDER BY level ASC, id ASC;

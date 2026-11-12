@@ -1,8 +1,8 @@
 # 🥋 Any-Practice
 
-> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, Git History Surgery, and Capture The Flag (CTF) Cybersecurity.**
+> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, Git History Surgery, SQL Database Engineering, and Capture The Flag (CTF) Cybersecurity.**
 
-`any-practice` brings together six specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
+`any-practice` brings together seven specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
 
 ---
 
@@ -15,6 +15,7 @@
 | **`cka`** | Certified Kubernetes Administrator | `cka` / `cka tui` | `cka list`, `cka practice <id>`, `cka exam` | Local Kind multi-node clusters + Calico |
 | **`dockp`** | Docker Containerization & Security | `dockp` / `dockp tui` | `dockp list`, `dockp start <id>`, `dockp verify` | Production Docker Engine & Compose |
 | **`gitp`** | Git History Surgery & Recovery | `gitp` / `gitp tui` | `gitp list`, `gitp start <id>`, `gitp verify` | Sandboxed local Git repositories |
+| **`sqlp`** | SQL Engineering & Query Optimization | `sqlp` / `sqlp tui` | `sqlp list`, `sqlp query "<sql>"`, `sqlp verify` | Fast, pure-Go embedded SQLite databases |
 | **`ctf`** | Cybersecurity & Capture The Flag | `ctf` / `ctf tui` | `ctf list`, `ctf submit <id> <flag>` | Security puzzles, crypto, web, pwn, rev, forensics |
 
 ---
@@ -56,9 +57,10 @@ Binaries will be placed in `./bin/`:
 - `bin/cka`
 - `bin/dockp`
 - `bin/gitp`
+- `bin/sqlp`
 - `bin/ctf`
 
-Run tests across all six modules:
+Run tests across all seven modules:
 ```bash
 make test
 ```
@@ -230,14 +232,46 @@ gitp reset rebase-01-squash
 
 ---
 
+### 🗄️ 7. SQL Database Practice (`sqlp`)
+Hands-on SQL practice covering multi-table joins, anti-joins, running totals (`SUM() OVER`), dense ranking, recursive CTE hierarchies, and index plan tuning with pure-Go embedded SQLite databases.
+
+```bash
+# Launch interactive split-pane TUI dashboard
+./bin/sqlp
+
+# List all available SQL labs
+./bin/sqlp list
+
+# Start a specific lab (seeds practice.db and creates solution.sql)
+./bin/sqlp start query-01-top-customers
+
+# Run an ad-hoc SQL query and inspect results in a Unicode table:
+./bin/sqlp query query-01-top-customers "SELECT * FROM customers LIMIT 3;"
+
+# Write your query in /tmp/sqlp-labs/query-01-top-customers/solution.sql
+# Then verify your solution:
+./bin/sqlp verify query-01-top-customers
+
+# Or verify with an inline query:
+./bin/sqlp verify query-01-top-customers "SELECT c.id AS customer_id, c.name, SUM(o.amount) AS total_spent FROM customers c JOIN orders o ON c.id = o.customer_id GROUP BY c.id, c.name ORDER BY total_spent DESC LIMIT 3;"
+
+# Inspect database schema and table definitions
+./bin/sqlp tables query-01-top-customers
+
+# View progress breakdown across SQL topics
+./bin/sqlp progress
+```
+
+---
+
 ## 📂 Repository Structure
 
 ```
 any-practice/
 ├── Makefile                    # Monorepo build, test, and cleanup targets
-├── go.work                     # Go workspace linking all six modules
+├── go.work                     # Go workspace linking all seven modules
 ├── README.md                   # Suite overview and documentation
-├── bin/                        # Compiled suite binaries (algo, lp, cka, dockp, gitp, ctf)
+├── bin/                        # Compiled suite binaries (algo, lp, cka, dockp, gitp, sqlp, ctf)
 ├── algo-practice/              # Go algorithm practice workbook
 │   ├── cmd/algo/               # algo CLI entrypoint
 │   ├── exercises/              # Practice exercises across 5 tracks
@@ -269,6 +303,13 @@ any-practice/
 │   ├── internal/ui/            # Unified design system & CLI table renderer
 │   ├── internal/tui/           # Bubble Tea split-pane TUI
 │   ├── internal/scenario/      # Scenario loader and lab sandbox runner
+│   └── internal/progress/      # Uniform progress tracker
+├── sql-practice/               # SQL database engineering & query optimization
+│   ├── cmd/sqlp/               # sqlp CLI entrypoint
+│   ├── scenarios/              # SQL labs across queries, joins, windows, CTEs, and indexes
+│   ├── internal/ui/            # Unified design system & CLI table renderer
+│   ├── internal/tui/           # Bubble Tea split-pane TUI
+│   ├── internal/scenario/      # Scenario loader, SQLite runner & query verifier
 │   └── internal/progress/      # Uniform progress tracker
 └── ctf-practice/               # Capture The Flag security training
     ├── cmd/ctf/                # ctf CLI entrypoint

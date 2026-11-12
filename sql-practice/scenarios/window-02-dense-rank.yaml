@@ -1,0 +1,50 @@
+id: window-02-dense-rank
+title: "Rank Salaries within Departments (Dense Rank)"
+category: Window Functions
+difficulty: Medium
+description: |
+  HR wants to evaluate internal pay grades.
+  Rank employees by salary within each department without skipping rank numbers when ties occur.
+goal: |
+  Write a query returning:
+    - dept_name (from departments.name)
+    - emp_name (from employees.name)
+    - salary
+    - salary_rank (calculated via DENSE_RANK())
+  Ordered by 'dept_name' ASCENDING, 'salary' DESCENDING, 'emp_name' ASCENDING.
+hints:
+  - "Use 'DENSE_RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC)'"
+  - "Join 'employees' and 'departments' on 'e.dept_id = d.id'"
+  - "Ensure you order by 'dept_name ASC, salary DESC, emp_name ASC'"
+setup: |
+  CREATE TABLE departments (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+  );
+
+  CREATE TABLE employees (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    dept_id INTEGER NOT NULL,
+    salary REAL NOT NULL,
+    FOREIGN KEY(dept_id) REFERENCES departments(id)
+  );
+
+  INSERT INTO departments VALUES
+    (1, 'Engineering'),
+    (2, 'Sales');
+
+  INSERT INTO employees VALUES
+    (101, 'Alex', 1, 140000.00),
+    (102, 'Beth', 1, 160000.00),
+    (103, 'Carlos', 1, 140000.00),
+    (104, 'Dana', 1, 120000.00),
+    (201, 'Evan', 2, 95000.00),
+    (202, 'Fiona', 2, 110000.00),
+    (203, 'George', 2, 95000.00);
+solution: |
+  SELECT d.name AS dept_name, e.name AS emp_name, e.salary,
+         DENSE_RANK() OVER (PARTITION BY e.dept_id ORDER BY e.salary DESC) AS salary_rank
+  FROM employees e
+  JOIN departments d ON e.dept_id = d.id
+  ORDER BY dept_name ASC, e.salary DESC, emp_name ASC;
