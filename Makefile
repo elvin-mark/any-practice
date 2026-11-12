@@ -1,11 +1,11 @@
-.PHONY: all build build-algo build-lp build-cka test clean help
+.PHONY: all build build-algo build-lp build-cka build-ctf test clean help
 
 BIN_DIR := bin
 
 all: build
 
 ## build: Compiles all CLI/TUI tools into their subfolders and root bin/
-build: build-algo build-lp build-cka
+build: build-algo build-lp build-cka build-ctf
 	@echo "✓ All Any-Practice tools successfully built!"
 
 build-algo:
@@ -26,7 +26,13 @@ build-cka:
 	@mkdir -p $(BIN_DIR)
 	@cp k8s-practice/bin/cka $(BIN_DIR)/cka
 
-## test: Runs test suites across all three tools
+build-ctf:
+	@echo "Building ctf-practice/bin/ctf..."
+	@cd ctf-practice && $(MAKE) build
+	@mkdir -p $(BIN_DIR)
+	@cp ctf-practice/bin/ctf $(BIN_DIR)/ctf
+
+## test: Runs test suites across all tools
 test:
 	@echo "Testing algo-practice..."
 	@cd algo-practice && $(MAKE) test
@@ -34,6 +40,8 @@ test:
 	@cd linux-practice && go test ./internal/state ./internal/scenario ./internal/progress ./internal/ui
 	@echo "Testing k8s-practice..."
 	@cd k8s-practice && go test ./internal/exam ./internal/scenario ./internal/progress ./internal/ui
+	@echo "Testing ctf-practice..."
+	@cd ctf-practice && $(MAKE) test
 	@echo "✓ All test suites passed!"
 
 ## vet: Runs go vet across all projects
@@ -42,6 +50,7 @@ vet:
 	@cd algo-practice && go vet ./...
 	@cd linux-practice && go vet ./...
 	@cd k8s-practice && go vet ./...
+	@cd ctf-practice && go vet ./...
 	@echo "✓ Go vet passed!"
 
 ## clean: Removes build binaries and transient test files
@@ -51,6 +60,7 @@ clean:
 	@cd algo-practice && $(MAKE) clean
 	@cd linux-practice && $(MAKE) clean
 	@cd k8s-practice && $(MAKE) clean
+	@cd ctf-practice && $(MAKE) clean
 	@rm -f *.test *.out coverage.txt
 	@echo "✓ Clean complete!"
 

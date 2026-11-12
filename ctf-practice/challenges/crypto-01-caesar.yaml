@@ -1,0 +1,16 @@
+id: crypto-01-caesar
+title: Caesar Shift Cipher
+category: Crypto
+difficulty: Easy
+points: 50
+description: |
+  A classic substitution cipher used by Julius Caesar to protect military secrets.
+  The intercept reads:
+    "Wklv lv d VHFUHW phvvdjh: IODJ{fdhvdu_vkliw_lv_fodvvlf}"
+  
+  Shift value is +3 (A -> D). Reverse the shift by -3 (D -> A) to discover the flag!
+hints:
+  - "Each letter is shifted forward by 3 places in the alphabet."
+  - "D becomes A, E becomes B, F becomes C."
+  - "FLAG{} wrapper shifts from IODJ{}."
+flag: FLAG{caesar_shift_is_classic}

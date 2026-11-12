@@ -1,0 +1,17 @@
+id: crypto-02-xor-single-byte
+title: Single-Byte XOR Decryption
+category: Crypto
+difficulty: Medium
+points: 100
+description: |
+  XOR encryption is reversible: if Ciphertext = Plaintext ^ Key, then Plaintext = Ciphertext ^ Key.
+  A flag was encrypted with an 8-bit key byte 0x42 ('B').
+  Hex ciphertext:
+    040e0305391a0d103d111b0c03173d191d1e0d3d011316173d09171b3d09131e3d07171b1b173d0613171e1b7f
+  
+  XOR each byte with 0x42 to decrypt the flag.
+hints:
+  - "The first byte 0x04 ^ 0x42 = 0x46 ('F')."
+  - "The second byte 0x0e ^ 0x42 = 0x4c ('L')."
+  - "Notice the start begins with 'FLAG{'."
+flag: FLAG{xor_is_the_bread_and_butter_of_crypto}

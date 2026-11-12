@@ -1,0 +1,18 @@
+id: web-01-sqli-bypass
+title: SQLi Authentication Bypass
+category: Web
+difficulty: Easy
+points: 75
+description: |
+  A legacy login form executes unsanitized user inputs:
+    SELECT * FROM users WHERE username = '$USER' AND password = '$PASSWORD';
+  
+  An attacker provides:
+    admin' OR '1'='1' --
+  
+  What is the vulnerability classification and what flag was leaked in the session cookie?
+  Flag format: FLAG{sqli_always_use_prepared_statements}
+hints:
+  - "SQL injection occurs when user-supplied input is directly concatenated into SQL queries."
+  - "Prepared statements (parameterized queries) prevent this entirely."
+flag: FLAG{sqli_always_use_prepared_statements}

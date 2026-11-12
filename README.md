@@ -1,8 +1,8 @@
 # 🥋 Any-Practice
 
-> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, and Kubernetes (CKA).**
+> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), and Capture The Flag (CTF) Cybersecurity.**
 
-`any-practice` brings together three specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
+`any-practice` brings together four specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
 
 ---
 
@@ -13,6 +13,7 @@
 | **`algo`** | Computer Science & Algorithms | `algo` / `algo watch` | `algo list`, `algo verify <id>` | Pure Go, AST validation, benchmarks |
 | **`lp`** | Linux Systems Administration | `lp` | `lp list`, `lp start <id>`, `lp verify` | Ubuntu 24.04 systemd containers |
 | **`cka`** | Certified Kubernetes Administrator | `cka` / `cka tui` | `cka list`, `cka practice <id>`, `cka exam` | Local Kind multi-node clusters + Calico |
+| **`ctf`** | Cybersecurity & Capture The Flag | `ctf` / `ctf tui` | `ctf list`, `ctf submit <id> <flag>` | Security puzzles, crypto, web, pwn, rev, forensics |
 
 ---
 
@@ -51,8 +52,9 @@ Binaries will be placed in `./bin/`:
 - `bin/algo`
 - `bin/lp`
 - `bin/cka`
+- `bin/ctf`
 
-Run tests across all three modules:
+Run tests across all four modules:
 ```bash
 make test
 ```
@@ -135,14 +137,39 @@ Simulate the 2-hour Certified Kubernetes Administrator exam or drill individual 
 
 ---
 
+### 🚩 4. Capture The Flag Practice (`ctf`)
+Interactive CTF training platform covering cryptography, web security, binary reverse engineering, stack overflows, forensics, and decoding drills.
+
+```bash
+# Launch interactive split-pane TUI dashboard
+./bin/ctf
+
+# List all available challenges and points
+./bin/ctf list
+
+# Display challenge briefing and instructions
+./bin/ctf show crypto-01-caesar
+
+# Reveal progressive hints
+./bin/ctf hint crypto-01-caesar
+
+# Submit a flag
+./bin/ctf submit crypto-01-caesar "FLAG{caesar_shift_is_classic}"
+
+# View category breakdown and total score
+./bin/ctf progress
+```
+
+---
+
 ## 📂 Repository Structure
 
 ```
 any-practice/
 ├── Makefile                    # Monorepo build, test, and cleanup targets
-├── go.work                     # Go workspace linking all three modules
+├── go.work                     # Go workspace linking all four modules
 ├── README.md                   # Suite overview and documentation
-├── bin/                        # Compiled suite binaries (algo, lp, cka)
+├── bin/                        # Compiled suite binaries (algo, lp, cka, ctf)
 ├── algo-practice/              # Go algorithm practice workbook
 │   ├── cmd/algo/               # algo CLI entrypoint
 │   ├── exercises/              # Practice exercises across 5 tracks
@@ -154,13 +181,20 @@ any-practice/
 │   ├── internal/ui/            # Unified design system & CLI table renderer
 │   ├── internal/cli/           # Cobra CLI commands
 │   └── internal/tui/           # Bubble Tea split-pane TUI
-└── k8s-practice/               # CKA mock exam simulator & drill labs
-    ├── cmd/cka/                # cka CLI entrypoint
-    ├── scenarios/              # 20 CKA scenario YAMLs, prompts, and verification scripts
+├── k8s-practice/               # CKA mock exam simulator & drill labs
+│   ├── cmd/cka/                # cka CLI entrypoint
+│   ├── scenarios/              # 20 CKA scenario YAMLs, prompts, and verification scripts
+│   ├── internal/ui/            # Unified design system & CLI table renderer
+│   ├── internal/tui/           # Bubble Tea CKA scenario browser TUI
+│   ├── internal/cluster/       # Kind cluster management
+│   └── internal/exam/          # Exam timer, state, and score report generator
+└── ctf-practice/               # Capture The Flag security training
+    ├── cmd/ctf/                # ctf CLI entrypoint
+    ├── challenges/             # Curated challenges across 6 categories
     ├── internal/ui/            # Unified design system & CLI table renderer
-    ├── internal/tui/           # Bubble Tea CKA scenario browser TUI
-    ├── internal/cluster/       # Kind cluster management
-    └── internal/exam/          # Exam timer, state, and score report generator
+    ├── internal/tui/           # Bubble Tea interactive dashboard
+    ├── internal/challenge/     # Challenge model, registry, and flag validation
+    └── internal/progress/      # Uniform progress and score tracker
 ```
 
 ---

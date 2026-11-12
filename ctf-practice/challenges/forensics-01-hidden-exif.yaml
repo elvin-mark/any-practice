@@ -1,0 +1,18 @@
+id: forensics-01-hidden-exif
+title: Hidden Metadata in Files
+category: Forensics
+difficulty: Easy
+points: 50
+description: |
+  Digital images frequently embed Exchangeable Image File Format (EXIF) tags containing
+  camera models, GPS coordinates, author names, and comments.
+  
+  Inspect the metadata field "UserComment" or EXIF tags using tools like `exiftool` or `strings`:
+    exiftool photo.jpg | grep -i "Comment"
+  
+  The comment field holds the secret flag:
+    "Comment: FLAG{exif_metadata_reveals_secrets}"
+hints:
+  - "ExifTool and Exiv2 can read/write EXIF metadata."
+  - "Privacy tip: strip EXIF before publishing photos online!"
+flag: FLAG{exif_metadata_reveals_secrets}

@@ -1,0 +1,24 @@
+id: misc-01-base64-rot13
+title: Layered Encodings
+category: Misc
+difficulty: Easy
+points: 50
+description: |
+  Data obfuscation often layers multiple standard encodings.
+  Given the Base64 encoded payload:
+    "U0xOR3tmM3JfcDFweTNfcmVuMGQzZDJ9"
+  
+  Decoded with base64 gives:
+    "SLNG{f3r_p1py3_ren0d3d2}"
+  
+  Applying ROT13 (shift by 13) yields the final flag:
+    "FLAG{s3e_c1ch3_eeb0q3q2}" -> wait, notice 'S' + 13 = 'F', 'L' + 13 = 'Y', etc.
+    Let's verify: 'S' - 13 = 'F', 'L' - 13 = 'Y' -> wait, 'F' + 13 = 'S', 'L' + 13 = 'Y'.
+  The correct ROT13 of "FLAG{m1x1ng_3nc0d1ng5}" is "SYNT{z1k1at_3ap0q1at5}".
+  Base64 of "SYNT{z1k1at_3ap0q1at5}" is "U1lOVHt6MWsxYXRfM2FwMHExYXQ1fQ==".
+  
+  Decode the payload "U1lOVHt6MWsxYXRfM2FwMHExYXQ1fQ==" by Base64 then ROT13 to obtain the flag!
+hints:
+  - "echo 'U1lOVHt6MWsxYXRfM2FwMHExYXQ1fQ==' | base64 -d | tr 'A-Za-z' 'N-ZA-Mn-za-m'"
+  - "ROT13 is its own inverse (applying it twice returns the original text)."
+flag: FLAG{m1x1ng_3nc0d1ng5}

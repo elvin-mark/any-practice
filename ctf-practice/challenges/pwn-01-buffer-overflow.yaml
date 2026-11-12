@@ -1,0 +1,25 @@
+id: pwn-01-buffer-overflow
+title: Stack Buffer Overflow Concepts
+category: Pwn
+difficulty: Hard
+points: 150
+description: |
+  A 32-bit x86 vulnerable C program contains:
+    char buf[64];
+    gets(buf); // Unbounded read!
+  
+  Stack layout:
+    [buf: 64 bytes] [Saved EBP: 4 bytes] [Saved EIP: 4 bytes]
+  
+  To overwrite the instruction pointer (EIP) with the address of win_function() at 0x080484b6,
+  the payload requires:
+    64 bytes (buffer padding) + 4 bytes (EBP padding) + 4 bytes (little-endian target address)
+    = 68 bytes of junk + "\xb6\x84\x04\x08"
+  
+  What is the minimum padding length (in bytes) needed before reaching the saved return address?
+  Flag format: FLAG{offset_68_bytes_to_saved_eip}
+hints:
+  - "The buffer size is 64 bytes."
+  - "In 32-bit x86, the saved base pointer (EBP) occupies 4 bytes."
+  - "Total offset to return address = 64 + 4 = 68 bytes."
+flag: FLAG{offset_68_bytes_to_saved_eip}

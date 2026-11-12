@@ -1,0 +1,17 @@
+id: reverse-01-strings-extract
+title: Binary Strings Extraction
+category: Reverse
+difficulty: Easy
+points: 75
+description: |
+  Compiled binaries often leave hardcoded plaintext strings, URLs, and secrets intact in the .rodata section.
+  
+  Running the GNU `strings` utility on an ELF binary exposes embedded ASCII characters:
+    strings -n 8 ./auth_checker | grep "FLAG{"
+  
+  Submit the discovered flag string:
+    FLAG{strings_utility_finds_embedded_secrets}
+hints:
+  - "The strings command searches for printable character sequences of a specified minimum length."
+  - "In reverse engineering, strings is often the very first reconnaissance step."
+flag: FLAG{strings_utility_finds_embedded_secrets}

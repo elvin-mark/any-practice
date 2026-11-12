@@ -4,6 +4,8 @@ bin/
 algo
 lp
 cka
+ctf
+dockp
 *.exe
 
 # Test and coverage artifacts
@@ -18,6 +20,10 @@ coverage.txt
 */.lp/
 .cka/
 */.cka/
+.ctf/
+*/.ctf/
+.dockp/
+*/.dockp/
 cka-exam-report-*.md
 */cka-exam-report-*.md
 
