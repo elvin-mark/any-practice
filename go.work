@@ -4,6 +4,7 @@ use (
 	./algo-practice
 	./ctf-practice
 	./docker-practice
+	./git-practice
 	./k8s-practice
 	./linux-practice
 )

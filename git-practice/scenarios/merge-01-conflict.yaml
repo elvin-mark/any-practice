@@ -1,0 +1,63 @@
+id: merge-01-conflict
+title: "Resolving 3-Way Merge Conflicts"
+category: Merge
+difficulty: Medium
+description: |
+  Branch 'feature/oauth' and 'main' both modified 'server.conf' in conflicting ways.
+  Git initiated a merge but stopped with conflict markers.
+goal: |
+  1. Open 'server.conf' and resolve the merge conflict.
+  2. Keep 'PORT=8080' (from main) AND 'ENABLE_OAUTH=true' (from feature/oauth).
+  3. Remove all conflict markers (<<<<<<<, =======, >>>>>>>).
+  4. Stage the resolved file with 'git add server.conf' and complete the merge with 'git commit'.
+hints:
+  - "Run 'git status' to inspect unmerged paths"
+  - "Edit server.conf to remove markers and keep desired lines"
+  - "Run 'git add server.conf' followed by 'git commit'"
+setup: |
+  echo -e "APP_NAME=AnyApp\nPORT=8080\nDEBUG=false" > server.conf
+  git add server.conf
+  git commit -m "initial config"
+
+  git checkout -b feature/oauth
+  echo -e "APP_NAME=AnyApp\nPORT=3000\nENABLE_OAUTH=true\nDEBUG=false" > server.conf
+  git add server.conf
+  git commit -m "feat: enable oauth and test port 3000"
+
+  git checkout main
+  echo -e "APP_NAME=AnyApp\nPORT=8080\nTLS_ENABLED=true\nDEBUG=false" > server.conf
+  git add server.conf
+  git commit -m "chore: enable TLS on main"
+
+  # Trigger merge conflict
+  git merge feature/oauth || true
+verify: |
+  set -e
+  # 1. Working tree must be clean
+  if [ -n "$(git status --porcelain)" ]; then
+    echo "Working tree is not clean. Did you finish git commit?"
+    exit 1
+  fi
+
+  # 2. Latest commit must be a merge commit (has at least 2 parents)
+  PARENTS=$(git rev-parse HEAD^@ | wc -l)
+  if [ "$PARENTS" -lt 2 ]; then
+    echo "HEAD is not a merge commit. Did you merge feature/oauth?"
+    exit 1
+  fi
+
+  # 3. No conflict markers remaining in server.conf
+  if grep -q "<<<<<<<" server.conf || grep -q ">>>>>>>" server.conf; then
+    echo "Conflict markers still present in server.conf"
+    exit 1
+  fi
+
+  # 4. Check expected configuration values
+  if ! grep -q "PORT=8080" server.conf; then
+    echo "Missing expected PORT=8080 in server.conf"
+    exit 1
+  fi
+  if ! grep -q "ENABLE_OAUTH=true" server.conf; then
+    echo "Missing expected ENABLE_OAUTH=true in server.conf"
+    exit 1
+  fi

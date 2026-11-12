@@ -1,0 +1,46 @@
+id: detached-01-head-fix
+title: Rescuing Commits from Detached HEAD
+category: Recovery
+difficulty: Easy
+description: |
+  While investigating an older commit, a developer made a new commit directly
+  in "detached HEAD" state. Because no branch points to it, switching branches
+  will cause Git garbage collection to eventually delete it.
+goal: |
+  Save the detached commit by creating and checking out a new branch named:
+    "feature/rescued-work"
+hints:
+  - "To branch from your current detached commit: 'git checkout -b feature/rescued-work'"
+  - "Alternatively: 'git switch -c feature/rescued-work'"
+setup: |
+  echo "v1.0" > app.txt
+  git add app.txt
+  git commit -m "chore: base release"
+
+  # Detach HEAD
+  git checkout --detach HEAD
+
+  echo "valuable rescued feature" > rescued.txt
+  git add rescued.txt
+  git commit -m "feat: valuable changes in detached state"
+verify: |
+  set -e
+  # 1. Must be on branch feature/rescued-work
+  BRANCH=$(git branch --show-current)
+  if [ "$BRANCH" != "feature/rescued-work" ]; then
+    echo "Currently on branch '$BRANCH'. Expected to be on 'feature/rescued-work'"
+    exit 1
+  fi
+
+  # 2. File rescued.txt must exist
+  if [ ! -f rescued.txt ]; then
+    echo "rescued.txt missing from branch"
+    exit 1
+  fi
+
+  # 3. Commit message must match
+  MSG=$(git log -1 --pretty=%s)
+  if [ "$MSG" != "feat: valuable changes in detached state" ]; then
+    echo "Expected commit 'feat: valuable changes in detached state', got '$MSG'"
+    exit 1
+  fi

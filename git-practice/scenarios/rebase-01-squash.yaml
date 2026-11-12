@@ -1,0 +1,56 @@
+id: rebase-01-squash
+title: "Interactive Rebase: Squashing Commits"
+category: Rebase
+difficulty: Easy
+description: |
+  A feature branch was developed with messy "work in progress" commits:
+    1. feat: add user schema
+    2. wip: fix typo
+    3. wip: add login handler
+  
+  Clean git history requires squashing related commits before merging.
+goal: |
+  Perform an interactive rebase (`git rebase -i HEAD~3`) to squash the top 3 commits
+  into a single cohesive commit with the commit message:
+    "feat: implement user authentication"
+hints:
+  - "Run 'git rebase -i HEAD~3'"
+  - "Leave the first commit as 'pick', change the next two to 'squash' (or 's')"
+  - "Save and edit the commit message to 'feat: implement user authentication'"
+setup: |
+  echo "initial repo" > README.md
+  git add README.md
+  git commit -m "initial commit"
+
+  echo "user schema" > schema.sql
+  git add schema.sql
+  git commit -m "feat: add user schema"
+
+  echo "// typo fix" >> schema.sql
+  git add schema.sql
+  git commit -m "wip: fix typo"
+
+  echo "func Login() {}" > auth.go
+  git add auth.go
+  git commit -m "wip: add login handler"
+verify: |
+  set -e
+  # 1. Total commits on main must be 2 (initial commit + squashed commit)
+  COUNT=$(git rev-list --count HEAD)
+  if [ "$COUNT" -ne 2 ]; then
+    echo "Expected exactly 2 commits on branch, found $COUNT. Did you squash the 3 WIP commits?"
+    exit 1
+  fi
+
+  # 2. Latest commit message must match
+  MSG=$(git log -1 --pretty=%s)
+  if [ "$MSG" != "feat: implement user authentication" ]; then
+    echo "Expected commit message 'feat: implement user authentication', got '$MSG'"
+    exit 1
+  fi
+
+  # 3. Files must still exist
+  if [ ! -f schema.sql ] || [ ! -f auth.go ]; then
+    echo "Missing expected files schema.sql or auth.go"
+    exit 1
+  fi

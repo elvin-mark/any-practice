@@ -1,8 +1,8 @@
 # 🥋 Any-Practice
 
-> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, and Capture The Flag (CTF) Cybersecurity.**
+> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, Git History Surgery, and Capture The Flag (CTF) Cybersecurity.**
 
-`any-practice` brings together five specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
+`any-practice` brings together six specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
 
 ---
 
@@ -14,6 +14,7 @@
 | **`lp`** | Linux Systems Administration | `lp` | `lp list`, `lp start <id>`, `lp verify` | Ubuntu 24.04 systemd containers |
 | **`cka`** | Certified Kubernetes Administrator | `cka` / `cka tui` | `cka list`, `cka practice <id>`, `cka exam` | Local Kind multi-node clusters + Calico |
 | **`dockp`** | Docker Containerization & Security | `dockp` / `dockp tui` | `dockp list`, `dockp start <id>`, `dockp verify` | Production Docker Engine & Compose |
+| **`gitp`** | Git History Surgery & Recovery | `gitp` / `gitp tui` | `gitp list`, `gitp start <id>`, `gitp verify` | Sandboxed local Git repositories |
 | **`ctf`** | Cybersecurity & Capture The Flag | `ctf` / `ctf tui` | `ctf list`, `ctf submit <id> <flag>` | Security puzzles, crypto, web, pwn, rev, forensics |
 
 ---
@@ -54,9 +55,10 @@ Binaries will be placed in `./bin/`:
 - `bin/lp`
 - `bin/cka`
 - `bin/dockp`
+- `bin/gitp`
 - `bin/ctf`
 
-Run tests across all five modules:
+Run tests across all six modules:
 ```bash
 make test
 ```
@@ -196,14 +198,46 @@ Interactive CTF training platform covering cryptography, web security, binary re
 
 ---
 
+### 🔀 6. Git History Surgery & Recovery Practice (`gitp`)
+Safe, automated hands-on practice labs for advanced Git workflows, interactive rebases, conflict resolution, and reflog disaster recovery.
+
+```bash
+# Launch interactive split-pane TUI dashboard
+./bin/gitp
+
+# List all available drills and completion status
+./bin/gitp list
+
+# Start a specific practice lab (sets up /tmp/gitp-labs/<id>)
+./bin/gitp start rebase-01-squash
+
+# Switch into the isolated lab repository and work:
+cd /tmp/gitp-labs/rebase-01-squash
+git rebase -i HEAD~3
+
+# Verify your solution
+gitp verify rebase-01-squash
+
+# Reveal hints if stuck
+gitp hint rebase-01-squash
+
+# Reset lab workspace back to initial state
+gitp reset rebase-01-squash
+
+# View progress and skill breakdown
+./bin/gitp progress
+```
+
+---
+
 ## 📂 Repository Structure
 
 ```
 any-practice/
 ├── Makefile                    # Monorepo build, test, and cleanup targets
-├── go.work                     # Go workspace linking all four modules
+├── go.work                     # Go workspace linking all six modules
 ├── README.md                   # Suite overview and documentation
-├── bin/                        # Compiled suite binaries (algo, lp, cka, ctf)
+├── bin/                        # Compiled suite binaries (algo, lp, cka, dockp, gitp, ctf)
 ├── algo-practice/              # Go algorithm practice workbook
 │   ├── cmd/algo/               # algo CLI entrypoint
 │   ├── exercises/              # Practice exercises across 5 tracks
@@ -229,6 +263,13 @@ any-practice/
 │   ├── internal/tui/           # Bubble Tea split-pane TUI
 │   ├── internal/scenario/      # Scenario model, loader, and automated runner
 │   └── internal/progress/      # Progress tracker and scoring engine
+├── git-practice/               # Git history surgery, conflicts & disaster recovery
+│   ├── cmd/gitp/               # gitp CLI entrypoint
+│   ├── scenarios/              # Git drill scenarios with setup & verification logic
+│   ├── internal/ui/            # Unified design system & CLI table renderer
+│   ├── internal/tui/           # Bubble Tea split-pane TUI
+│   ├── internal/scenario/      # Scenario loader and lab sandbox runner
+│   └── internal/progress/      # Uniform progress tracker
 └── ctf-practice/               # Capture The Flag security training
     ├── cmd/ctf/                # ctf CLI entrypoint
     ├── challenges/             # Curated challenges across 6 categories

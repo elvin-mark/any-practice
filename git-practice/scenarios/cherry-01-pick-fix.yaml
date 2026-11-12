@@ -1,0 +1,57 @@
+id: cherry-01-pick-fix
+title: Selective Patching via Cherry-Pick
+category: Branching
+difficulty: Easy
+description: |
+  Branch 'hotfix/cve-2026-patch' contains a critical vulnerability patch, followed by
+  unfinished experimental refactoring. We need ONLY the security fix on 'main'.
+goal: |
+  1. Inspect the log of 'hotfix/cve-2026-patch' to find the commit message:
+       "fix(security): patch cve-2026-critical vulnerability"
+  2. While on 'main', cherry-pick only this specific commit:
+       git cherry-pick <commit-hash>
+hints:
+  - "Run 'git log hotfix/cve-2026-patch' to locate the commit hash"
+  - "Make sure you are on branch 'main' (git branch --show-current)"
+  - "Run 'git cherry-pick <hash>'"
+setup: |
+  echo "v2.0 production" > app.txt
+  git add app.txt
+  git commit -m "chore: v2.0 release"
+
+  git checkout -b hotfix/cve-2026-patch
+  echo "PATCH_APPLIED=true" > patch.txt
+  git add patch.txt
+  git commit -m "fix(security): patch cve-2026-critical vulnerability"
+
+  echo "wip untested experiments" > experimental.txt
+  git add experimental.txt
+  git commit -m "experiment: rewrite core engine"
+
+  git checkout main
+verify: |
+  set -e
+  # 1. Must be on main
+  BRANCH=$(git branch --show-current)
+  if [ "$BRANCH" != "main" ]; then
+    echo "Currently on branch '$BRANCH', expected to be on 'main'"
+    exit 1
+  fi
+
+  # 2. patch.txt must exist on main
+  if [ ! -f patch.txt ]; then
+    echo "patch.txt missing from main. Did you cherry-pick the fix commit?"
+    exit 1
+  fi
+
+  # 3. experimental.txt must NOT exist on main
+  if [ -f experimental.txt ]; then
+    echo "experimental.txt exists on main! You should only cherry-pick the fix, not merge the whole branch."
+    exit 1
+  fi
+
+  # 4. Commit message must be present in log
+  if ! git log -1 --pretty=%s | grep -q "fix(security): patch cve-2026-critical vulnerability"; then
+    echo "Top commit on main does not match the security fix commit message."
+    exit 1
+  fi

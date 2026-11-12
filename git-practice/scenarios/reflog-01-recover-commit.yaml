@@ -1,0 +1,47 @@
+id: reflog-01-recover-commit
+title: Disaster Recovery via Git Reflog
+category: Recovery
+difficulty: Medium
+description: |
+  A developer executed an accidental 'git reset --hard HEAD~1', discarding a crucial
+  commit containing production backup credentials and key files.
+  
+  Because Git retains dangling commits in the reflog for up to 90 days, the commit is not lost!
+goal: |
+  1. Inspect 'git reflog' to identify the hash of the lost commit with message:
+       "secret: backup access key"
+  2. Restore the commit to your current 'main' branch (e.g. via 'git merge <hash>' or 'git cherry-pick <hash>').
+hints:
+  - "Run 'git reflog' to view past HEAD movements"
+  - "Find the commit hash corresponding to 'secret: backup access key'"
+  - "Run 'git merge <hash>' or 'git cherry-pick <hash>' to bring it back to main"
+setup: |
+  echo "v1.0" > app.txt
+  git add app.txt
+  git commit -m "chore: initial release"
+
+  echo "SECRET_KEY_983719" > key.txt
+  git add key.txt
+  git commit -m "secret: backup access key"
+
+  # Accidental reset
+  git reset --hard HEAD~1
+verify: |
+  set -e
+  # 1. key.txt must exist on main
+  if [ ! -f key.txt ]; then
+    echo "key.txt is missing from working directory"
+    exit 1
+  fi
+
+  # 2. Key file content must match
+  if ! grep -q "SECRET_KEY_983719" key.txt; then
+    echo "key.txt content does not match expected secret"
+    exit 1
+  fi
+
+  # 3. Commit with message must exist in git log
+  if ! git log --pretty=%s | grep -q "secret: backup access key"; then
+    echo "Commit 'secret: backup access key' not found in history"
+    exit 1
+  fi

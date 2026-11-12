@@ -1,0 +1,61 @@
+id: bisect-01-find-bug
+title: "Binary Search Debugging with Git Bisect"
+category: Bisect
+difficulty: Medium
+description: |
+  A test script './test.sh' was passing on commit tagged 'good-v1', but is now
+  failing on 'HEAD'. Somewhere among the intermediate commits, a regression was introduced.
+goal: |
+  1. Use 'git bisect' to perform binary search between 'good-v1' and 'HEAD':
+       git bisect start HEAD good-v1
+       git bisect run ./test.sh
+  2. Once the first bad commit is located, write its short 7-character hash into 'offender.txt'.
+  3. Terminate the bisect session with 'git bisect reset'.
+hints:
+  - "Run 'git bisect start' followed by 'git bisect bad HEAD' and 'git bisect good good-v1'"
+  - "You can automate it with 'git bisect run ./test.sh'"
+  - "Take the 7-character commit ID reported by git bisect and echo it to offender.txt"
+setup: |
+  echo '#!/bin/bash' > test.sh
+  echo 'grep -q "STATUS=OK" config.txt' >> test.sh
+  chmod +x test.sh
+
+  echo "STATUS=OK" > config.txt
+  git add test.sh config.txt
+  git commit -m "feat: initial stable version"
+  git tag good-v1
+
+  for i in 1 2 3 4; do
+    echo "update $i" >> notes.txt
+    git add notes.txt
+    git commit -m "chore: minor note $i"
+  done
+
+  # Offender commit: breaks STATUS
+  echo "STATUS=BROKEN" > config.txt
+  git add config.txt
+  git commit -m "perf: optimize config parser"
+  BAD_HASH=$(git rev-parse --short=7 HEAD)
+
+  for i in 6 7 8 9; do
+    echo "cleanup $i" >> notes.txt
+    git add notes.txt
+    git commit -m "chore: cleanup task $i"
+  done
+
+  # Record the expected hash in an internal validation file
+  echo "$BAD_HASH" > .expected_bad_commit
+verify: |
+  set -e
+  if [ ! -f offender.txt ]; then
+    echo "offender.txt does not exist. Write the 7-character bad commit hash into offender.txt"
+    exit 1
+  fi
+
+  SUBMITTED=$(head -n 1 offender.txt | tr -d '[:space:]')
+  EXPECTED=$(cat .expected_bad_commit | tr -d '[:space:]')
+
+  if [ "$SUBMITTED" != "$EXPECTED" ]; then
+    echo "Incorrect commit hash in offender.txt. Got '$SUBMITTED', expected '$EXPECTED'"
+    exit 1
+  fi
