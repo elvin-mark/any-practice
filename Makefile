@@ -4,35 +4,35 @@ BIN_DIR := bin
 
 all: build
 
-## build: Compiles all CLI/TUI tools (algo, lp, cka) into root bin/
+## build: Compiles all CLI/TUI tools into their subfolders and root bin/
 build: build-algo build-lp build-cka
-	@echo "✓ All Any-Practice tools successfully built into $(BIN_DIR)/"
+	@echo "✓ All Any-Practice tools successfully built!"
 
 build-algo:
+	@echo "Building algo-practice/bin/algo..."
+	@cd algo-practice && $(MAKE) build
 	@mkdir -p $(BIN_DIR)
-	@echo "Building algo..."
-	@cd algo-practice && go build -o ../$(BIN_DIR)/algo ./cmd/algo
-	@mkdir -p algo-practice/bin && cp $(BIN_DIR)/algo algo-practice/bin/algo
+	@cp algo-practice/bin/algo $(BIN_DIR)/algo
 
 build-lp:
+	@echo "Building linux-practice/bin/lp..."
+	@cd linux-practice && $(MAKE) build
 	@mkdir -p $(BIN_DIR)
-	@echo "Building lp (linux-practice)..."
-	@cd linux-practice && go build -o ../$(BIN_DIR)/lp ./cmd/lp
-	@mkdir -p linux-practice/bin && cp $(BIN_DIR)/lp linux-practice/bin/lp
+	@cp linux-practice/bin/lp $(BIN_DIR)/lp
 
 build-cka:
+	@echo "Building k8s-practice/bin/cka..."
+	@cd k8s-practice && $(MAKE) build
 	@mkdir -p $(BIN_DIR)
-	@echo "Building cka (k8s-practice)..."
-	@cd k8s-practice && go build -o ../$(BIN_DIR)/cka ./cmd/cka
-	@mkdir -p k8s-practice/bin && cp $(BIN_DIR)/cka k8s-practice/bin/cka
+	@cp k8s-practice/bin/cka $(BIN_DIR)/cka
 
 ## test: Runs test suites across all three tools
 test:
-	@echo "Testing algo-practice (internal packages)..."
-	@cd algo-practice && go test ./internal/astcheck ./internal/exercise ./internal/progress ./internal/ui
-	@echo "Testing linux-practice (internal packages)..."
+	@echo "Testing algo-practice..."
+	@cd algo-practice && $(MAKE) test
+	@echo "Testing linux-practice..."
 	@cd linux-practice && go test ./internal/state ./internal/scenario ./internal/ui
-	@echo "Testing k8s-practice (internal packages)..."
+	@echo "Testing k8s-practice..."
 	@cd k8s-practice && go test ./internal/exam ./internal/scenario ./internal/ui
 	@echo "✓ All test suites passed!"
 
@@ -48,9 +48,9 @@ vet:
 clean:
 	@echo "Cleaning binaries..."
 	@rm -rf $(BIN_DIR)
-	@rm -f algo-practice/bin/algo algo-practice/algo
-	@rm -f linux-practice/bin/lp
-	@rm -f k8s-practice/bin/cka
+	@cd algo-practice && $(MAKE) clean
+	@cd linux-practice && $(MAKE) clean
+	@cd k8s-practice && $(MAKE) clean
 	@rm -f *.test *.out coverage.txt
 	@echo "✓ Clean complete!"
 
