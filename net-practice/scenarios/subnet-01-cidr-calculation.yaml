@@ -1,0 +1,44 @@
+id: subnet-01-cidr-calculation
+title: "IPv4 CIDR Subnetting Calculations"
+category: Subnetting
+difficulty: Easy
+description: |
+  A cloud architect provides an IP prefix for a Kubernetes worker node pool:
+    192.168.10.68/26
+  
+  You must determine the network boundaries and usable host addresses.
+goal: |
+  Create a file named 'subnet.txt' with the exact key=value parameters:
+    NETWORK=192.168.10.64
+    NETMASK=255.255.255.192
+    FIRST_USABLE=192.168.10.65
+    LAST_USABLE=192.168.10.126
+    BROADCAST=192.168.10.127
+hints:
+  - "/26 has a 6-bit host portion (2^6 = 64 addresses per block: 0..63, 64..127...)"
+  - "Since .68 falls in 64..127, the network address is 192.168.10.64"
+  - "The subnet mask for /26 is 255.255.255.192"
+setup: |
+  echo "# Write calculations to subnet.txt" > README.txt
+verify: |
+  set -e
+  if [ ! -f subnet.txt ]; then
+    echo "subnet.txt not found"
+    exit 1
+  fi
+
+  check_val() {
+    KEY=$1
+    EXPECTED=$2
+    VAL=$(grep -E "^${KEY}=" subnet.txt | cut -d'=' -f2 | tr -d '[:space:]')
+    if [ "$VAL" != "$EXPECTED" ]; then
+      echo "Mismatch for ${KEY}: expected '${EXPECTED}', got '${VAL}'"
+      exit 1
+    fi
+  }
+
+  check_val "NETWORK" "192.168.10.64"
+  check_val "NETMASK" "255.255.255.192"
+  check_val "FIRST_USABLE" "192.168.10.65"
+  check_val "LAST_USABLE" "192.168.10.126"
+  check_val "BROADCAST" "192.168.10.127"

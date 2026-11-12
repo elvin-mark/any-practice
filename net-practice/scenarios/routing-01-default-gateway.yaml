@@ -1,0 +1,40 @@
+id: routing-01-default-gateway
+title: "Fix Default Routing Gateway"
+category: Routing
+difficulty: Medium
+description: |
+  A network initialization script 'setup_routes.sh' attempts to establish connectivity to the Internet,
+  but outbound packets are failing because the default gateway is pointed to a blackhole dummy device
+  instead of '192.168.1.1' on interface 'eth0'.
+goal: |
+  1. Edit 'setup_routes.sh'.
+  2. Ensure the default gateway is set via '192.168.1.1' dev 'eth0'.
+  3. Ensure static route '10.0.0.0/8' is set via '192.168.1.254' dev 'eth0'.
+hints:
+  - "Look for 'ip route replace default via 192.168.1.1 dev eth0' in setup_routes.sh"
+  - "Ensure destination '10.0.0.0/8' goes through '192.168.1.254 dev eth0'"
+setup: |
+  cat << 'EOF' > setup_routes.sh
+  #!/bin/bash
+  # Network routing configuration
+  DEFAULT_GW="10.99.99.99"
+  DEFAULT_DEV="dummy0"
+  CORP_NET="10.0.0.0/8"
+  CORP_GW="192.168.1.254"
+
+  # Set routes
+  echo "ip route replace default via $DEFAULT_GW dev $DEFAULT_DEV"
+  echo "ip route replace $CORP_NET via $CORP_GW dev eth0"
+  EOF
+  chmod +x setup_routes.sh
+verify: |
+  set -e
+  OUTPUT=$(bash setup_routes.sh)
+  if ! echo "$OUTPUT" | grep -q "ip route replace default via 192.168.1.1 dev eth0"; then
+    echo "setup_routes.sh does not configure default via 192.168.1.1 dev eth0"
+    exit 1
+  fi
+  if ! echo "$OUTPUT" | grep -q "ip route replace 10.0.0.0/8 via 192.168.1.254 dev eth0"; then
+    echo "setup_routes.sh missing corporate route 10.0.0.0/8 via 192.168.1.254 dev eth0"
+    exit 1
+  fi

@@ -1,8 +1,8 @@
 # 🥋 Any-Practice
 
-> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, Git History Surgery, SQL Database Engineering, and Capture The Flag (CTF) Cybersecurity.**
+> **A unified, terminal-native practice suite for mastering Software Engineering, Linux Systems Administration, Kubernetes (CKA), Docker Containerization, Git History Surgery, SQL Database Engineering, Computer Networking, and Capture The Flag (CTF) Cybersecurity.**
 
-`any-practice` brings together seven specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
+`any-practice` brings together eight specialized, interactive CLI/TUI tools into a single cohesive monorepo. Built with Go, [Bubble Tea](https://github.com/charmbracelet/bubbletea), and [Lip Gloss](https://github.com/charmbracelet/lipgloss), all tools share a unified visual design language, dual CLI/TUI interfaces, and automated validation pipelines.
 
 ---
 
@@ -16,6 +16,7 @@
 | **`dockp`** | Docker Containerization & Security | `dockp` / `dockp tui` | `dockp list`, `dockp start <id>`, `dockp verify` | Production Docker Engine & Compose |
 | **`gitp`** | Git History Surgery & Recovery | `gitp` / `gitp tui` | `gitp list`, `gitp start <id>`, `gitp verify` | Sandboxed local Git repositories |
 | **`sqlp`** | SQL Engineering & Query Optimization | `sqlp` / `sqlp tui` | `sqlp list`, `sqlp query "<sql>"`, `sqlp verify` | Fast, pure-Go embedded SQLite databases |
+| **`netp`** | Computer Networking & Protocols | `netp` / `netp tui` | `netp list`, `netp start <id>`, `netp verify` | Network namespaces, packet traces & sockets |
 | **`ctf`** | Cybersecurity & Capture The Flag | `ctf` / `ctf tui` | `ctf list`, `ctf submit <id> <flag>` | Security puzzles, crypto, web, pwn, rev, forensics |
 
 ---
@@ -58,9 +59,10 @@ Binaries will be placed in `./bin/`:
 - `bin/dockp`
 - `bin/gitp`
 - `bin/sqlp`
+- `bin/netp`
 - `bin/ctf`
 
-Run tests across all seven modules:
+Run tests across all eight modules:
 ```bash
 make test
 ```
@@ -264,14 +266,45 @@ Hands-on SQL practice covering multi-table joins, anti-joins, running totals (`S
 
 ---
 
+### 🌐 8. Computer Networking Practice (`netp`)
+Hands-on computer networking drills covering DNS resolver troubleshooting, IPv4 CIDR subnetting calculations, TLS certificate chain assembly, packet log parsing, default gateway routing, and TCP port conflict resolution.
+
+```bash
+# Launch interactive split-pane TUI dashboard
+./bin/netp
+
+# List all available networking drills
+./bin/netp list
+
+# Start a specific lab (initializes /tmp/netp-labs/<id>)
+./bin/netp start dns-01-resolve-failure
+
+# Switch into the lab directory and work:
+cd /tmp/netp-labs/dns-01-resolve-failure
+
+# Verify your solution
+netp verify dns-01-resolve-failure
+
+# Reveal hints if stuck
+netp hint dns-01-resolve-failure
+
+# Reset workspace back to initial state
+netp reset dns-01-resolve-failure
+
+# View progress and skill breakdown
+./bin/netp progress
+```
+
+---
+
 ## 📂 Repository Structure
 
 ```
 any-practice/
 ├── Makefile                    # Monorepo build, test, and cleanup targets
-├── go.work                     # Go workspace linking all seven modules
+├── go.work                     # Go workspace linking all eight modules
 ├── README.md                   # Suite overview and documentation
-├── bin/                        # Compiled suite binaries (algo, lp, cka, dockp, gitp, sqlp, ctf)
+├── bin/                        # Compiled suite binaries (algo, lp, cka, dockp, gitp, sqlp, netp, ctf)
 ├── algo-practice/              # Go algorithm practice workbook
 │   ├── cmd/algo/               # algo CLI entrypoint
 │   ├── exercises/              # Practice exercises across 5 tracks
@@ -310,6 +343,13 @@ any-practice/
 │   ├── internal/ui/            # Unified design system & CLI table renderer
 │   ├── internal/tui/           # Bubble Tea split-pane TUI
 │   ├── internal/scenario/      # Scenario loader, SQLite runner & query verifier
+│   └── internal/progress/      # Uniform progress tracker
+├── net-practice/               # Computer networking, protocols & packet analysis
+│   ├── cmd/netp/               # netp CLI entrypoint
+│   ├── scenarios/              # Networking drills (DNS, routing, subnetting, TLS, packets)
+│   ├── internal/ui/            # Unified design system & CLI table renderer
+│   ├── internal/tui/           # Bubble Tea split-pane TUI
+│   ├── internal/scenario/      # Scenario loader and lab workspace runner
 │   └── internal/progress/      # Uniform progress tracker
 └── ctf-practice/               # Capture The Flag security training
     ├── cmd/ctf/                # ctf CLI entrypoint

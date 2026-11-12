@@ -8,6 +8,7 @@ bin/
 /dockp
 /gitp
 /sqlp
+/netp
 *.exe
 
 # Databases
@@ -34,6 +35,8 @@ coverage.txt
 */.gitp/
 .sqlp/
 */.sqlp/
+.netp/
+*/.netp/
 cka-exam-report-*.md
 */cka-exam-report-*.md
 

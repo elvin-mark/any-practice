@@ -1,0 +1,55 @@
+id: tls-01-cert-expiry-chain
+title: "Build Valid TLS Certificate Bundle"
+category: TLS
+difficulty: Medium
+description: |
+  Clients connecting to our HTTPS endpoint fail verification with:
+    "SSL certificate problem: unable to get local issuer certificate"
+  
+  The server currently only serves 'cert.pem', missing the intermediate CA 'intermediate.pem'.
+goal: |
+  Assemble a complete bundle 'fullchain.pem' containing the server certificate followed by
+  the intermediate certificate in that exact order:
+    cat cert.pem intermediate.pem > fullchain.pem
+hints:
+  - "The standard bundle order is leaf (server) cert first, then intermediate CA"
+  - "Run 'cat cert.pem intermediate.pem > fullchain.pem'"
+  - "Verify locally using 'openssl verify -untrusted intermediate.pem -CAfile rootCA.pem cert.pem'"
+setup: |
+  # Generate self-signed root CA
+  openssl req -x509 -newkey rsa:2048 -days 365 -nodes \
+    -keyout rootKey.pem -out rootCA.pem \
+    -subj "/CN=AnyPractice Root CA" 2>/dev/null
+
+  # Generate intermediate CA
+  openssl req -newkey rsa:2048 -nodes \
+    -keyout intermediateKey.pem -out intermediateReq.pem \
+    -subj "/CN=AnyPractice Intermediate CA" 2>/dev/null
+
+  openssl x509 -req -in intermediateReq.pem -days 365 \
+    -CA rootCA.pem -CAkey rootKey.pem -CAcreateserial \
+    -out intermediate.pem 2>/dev/null
+
+  # Generate server certificate
+  openssl req -newkey rsa:2048 -nodes \
+    -keyout certKey.pem -out certReq.pem \
+    -subj "/CN=api.internal.local" 2>/dev/null
+
+  openssl x509 -req -in certReq.pem -days 365 \
+    -CA intermediate.pem -CAkey intermediateKey.pem -CAcreateserial \
+    -out cert.pem 2>/dev/null
+
+  rm -f *Req.pem *.srl
+verify: |
+  set -e
+  if [ ! -f fullchain.pem ]; then
+    echo "fullchain.pem does not exist"
+    exit 1
+  fi
+
+  # Verify fullchain with openssl
+  OUTPUT=$(openssl verify -CAfile rootCA.pem -untrusted fullchain.pem cert.pem 2>&1)
+  if ! echo "$OUTPUT" | grep -q "OK"; then
+    echo "Certificate verification failed: $OUTPUT"
+    exit 1
+  fi

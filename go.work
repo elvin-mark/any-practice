@@ -7,5 +7,6 @@ use (
 	./git-practice
 	./k8s-practice
 	./linux-practice
+	./net-practice
 	./sql-practice
 )

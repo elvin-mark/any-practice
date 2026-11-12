@@ -1,0 +1,33 @@
+id: dns-01-resolve-failure
+title: "Fix Local DNS Resolution"
+category: DNS
+difficulty: Easy
+description: |
+  A backend application fails to connect to the internal database service:
+    "Could not resolve host: db.internal.local"
+  
+  In this environment, name resolution reads from local 'hosts' and 'resolv.conf'.
+goal: |
+  1. Add an entry in 'hosts' mapping 'db.internal.local' to IP '10.20.30.40'.
+  2. In 'resolv.conf', configure a valid upstream nameserver:
+       nameserver 8.8.8.8
+hints:
+  - "Append '10.20.30.40 db.internal.local' to hosts"
+  - "Ensure resolv.conf has a line 'nameserver 8.8.8.8'"
+setup: |
+  echo "# Local hosts configuration" > hosts
+  echo "127.0.0.1 localhost" >> hosts
+
+  echo "# Resolver configuration" > resolv.conf
+  echo "nameserver 0.0.0.0" >> resolv.conf
+verify: |
+  set -e
+  if ! grep -q "10.20.30.40[[:space:]]\+db.internal.local" hosts; then
+    echo "hosts file missing mapping '10.20.30.40 db.internal.local'"
+    exit 1
+  fi
+
+  if ! grep -q "nameserver 8.8.8.8" resolv.conf; then
+    echo "resolv.conf missing nameserver 8.8.8.8"
+    exit 1
+  fi

@@ -1,0 +1,42 @@
+id: port-01-listen-socket
+title: "Resolve TCP Port Binding Conflict"
+category: Firewall & Ports
+difficulty: Easy
+description: |
+  A service deployment script './start_server.sh' crashes with:
+    "Error: listen tcp 0.0.0.0:8089: bind: address already in use"
+  
+  The current process socket table is recorded in 'sockets.txt'.
+goal: |
+  1. Inspect 'sockets.txt' to identify the PID occupying port ':8089'.
+  2. Write that PID into 'kill_pid.txt' so the cleanup handler can terminate the rogue process.
+  3. Execute './start_server.sh' and ensure it records 'STATUS=RUNNING' in 'server.status'.
+hints:
+  - "Search 'sockets.txt' for ':8089'"
+  - "Echo the PID holding port 8089 into 'kill_pid.txt'"
+  - "Run './start_server.sh'"
+setup: |
+  cat << 'EOF' > sockets.txt
+  Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+  tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      1042/postgres       
+  tcp        0      0 0.0.0.0:8089            0.0.0.0:*               LISTEN      4519/rogue_daemon   
+  tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      821/sshd            
+  EOF
+
+  cat << 'EOF' > start_server.sh
+  #!/bin/bash
+  if [ -f kill_pid.txt ] && grep -q "4519" kill_pid.txt; then
+    echo "STATUS=RUNNING" > server.status
+    echo "Server started successfully on port 8089"
+  else
+    echo "Error: listen tcp 0.0.0.0:8089: bind: address already in use" >&2
+    exit 1
+  fi
+  EOF
+  chmod +x start_server.sh
+verify: |
+  set -e
+  if [ ! -f server.status ] || ! grep -q "STATUS=RUNNING" server.status; then
+    echo "Server is not running. Did you identify PID 4519 and run ./start_server.sh?"
+    exit 1
+  fi
