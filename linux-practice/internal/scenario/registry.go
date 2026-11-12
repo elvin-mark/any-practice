@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/elvin-mark/linux-practice/internal/config"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/config"
 )
 
 // Registry manages the catalog of embedded and external scenarios.

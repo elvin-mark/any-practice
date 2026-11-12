@@ -18,8 +18,8 @@ import (
 	dockerclient "github.com/docker/docker/client"
 	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
-	"github.com/elvin-mark/linux-practice/internal/config"
-	"github.com/elvin-mark/linux-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/config"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/scenario"
 )
 
 const (

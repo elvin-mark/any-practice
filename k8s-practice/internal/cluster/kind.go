@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/elvin-mark/k8s-practice/internal/ui"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/ui"
 )
 
 const (

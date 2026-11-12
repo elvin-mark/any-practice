@@ -3,8 +3,8 @@ package scenario_test
 import (
 	"testing"
 
-	"github.com/elvin-mark/linux-practice/embedded"
-	"github.com/elvin-mark/linux-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/linux-practice/embedded"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/scenario"
 )
 
 func TestRegistry_LoadEmbedded(t *testing.T) {

@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elvin-mark/k8s-practice/internal/ui"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/ui"
 )
 
 // Setup prepares the scenario environment on the cluster

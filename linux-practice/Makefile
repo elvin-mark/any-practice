@@ -2,7 +2,7 @@
 
 BINARY_NAME=lp
 BUILD_DIR=bin
-MODULE=github.com/elvin-mark/linux-practice
+MODULE=github.com/elvin-mark/any-practice/linux-practice
 
 all: test build
 

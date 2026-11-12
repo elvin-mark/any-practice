@@ -10,9 +10,9 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/fsnotify/fsnotify"
 
-	"github.com/elvin-mark/algo-practice/internal/exercise"
-	"github.com/elvin-mark/algo-practice/internal/progress"
-	"github.com/elvin-mark/algo-practice/internal/runner"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/exercise"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/progress"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/runner"
 )
 
 type ViewState int

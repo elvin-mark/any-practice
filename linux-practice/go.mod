@@ -1,4 +1,4 @@
-module github.com/elvin-mark/linux-practice
+module github.com/elvin-mark/any-practice/linux-practice
 
 go 1.27.3
 

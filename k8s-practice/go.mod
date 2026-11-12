@@ -1,4 +1,4 @@
-module github.com/elvin-mark/k8s-practice
+module github.com/elvin-mark/any-practice/k8s-practice
 
 go 1.27.3
 

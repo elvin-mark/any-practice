@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	algopractice "github.com/elvin-mark/algo-practice"
+	algopractice "github.com/elvin-mark/any-practice/algo-practice"
 )
 
 // UnpackExercises extracts the embedded exercises into the target directory.

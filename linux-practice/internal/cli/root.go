@@ -8,41 +8,44 @@ import (
 	"strings"
 
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/elvin-mark/linux-practice/embedded"
-	"github.com/elvin-mark/linux-practice/internal/config"
-	"github.com/elvin-mark/linux-practice/internal/container"
-	"github.com/elvin-mark/linux-practice/internal/scenario"
-	"github.com/elvin-mark/linux-practice/internal/state"
-	"github.com/elvin-mark/linux-practice/internal/tui"
-	"github.com/elvin-mark/linux-practice/internal/ui"
+	"github.com/elvin-mark/any-practice/linux-practice/embedded"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/config"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/container"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/progress"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/tui"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/ui"
 	"github.com/spf13/cobra"
 )
 
 var (
-	registry *scenario.Registry
-	appState *state.State
-	manager  *container.Manager
+	registry     *scenario.Registry
+	appProgress  *progress.Progress
+	manager      *container.Manager
+	progressFile string
 )
 
 // Execute initializes and runs the root cobra command.
 func Execute() error {
-	var err error
-	appState, err = state.Load()
-	if err != nil {
-		return fmt.Errorf("loading state: %w", err)
-	}
-
-	registry = scenario.NewRegistry()
-	if err := registry.LoadAll(embedded.ScenariosFS); err != nil {
-		return fmt.Errorf("loading scenarios: %w", err)
-	}
-
 	rootCmd := &cobra.Command{
 		Use:   "lp [command]",
 		Short: "Linux Practice - Master Linux administration hands-on with realistic scenarios",
 		Long: `lp (linux-practice) is a hands-on training tool for Linux systems administration.
 It provisions isolated Ubuntu systemd containers, injects real-world problems and misconfigurations,
 and validates your solutions automatically.`,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			var err error
+			appProgress, err = progress.Load(progressFile)
+			if err != nil {
+				return fmt.Errorf("loading progress: %w", err)
+			}
+
+			registry = scenario.NewRegistry()
+			if err := registry.LoadAll(embedded.ScenariosFS); err != nil {
+				return fmt.Errorf("loading scenarios: %w", err)
+			}
+			return nil
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			mgr, err := container.NewManager()
 			if err != nil {
@@ -50,12 +53,14 @@ and validates your solutions automatically.`,
 			}
 			manager = mgr
 
-			m := tui.NewModel(registry, appState, manager)
+			m := tui.NewModel(registry, appProgress, manager)
 			p := tea.NewProgram(m, tea.WithAltScreen())
 			_, err = p.Run()
 			return err
 		},
 	}
+
+	rootCmd.PersistentFlags().StringVarP(&progressFile, "progress", "p", progress.DefaultPath(), "Path to progress state file")
 
 	rootCmd.AddCommand(
 		newListCmd(),
@@ -105,9 +110,8 @@ func newListCmd() *cobra.Command {
 			completedCount := 0
 
 			for i, sc := range scenarios {
-				isDone := false
-				if p, ok := appState.Scenarios[sc.ID]; ok && p.Completed {
-					isDone = true
+				isDone := appProgress.IsCompleted(sc.ID)
+				if isDone {
 					completedCount++
 				}
 				rows = append(rows, []string{
@@ -169,8 +173,8 @@ func newStartCmd() *cobra.Command {
 				return fmt.Errorf("starting scenario: %w", err)
 			}
 
-			appState.RecordStart(sc.ID)
-			_ = appState.Save()
+			appProgress.RecordStart(sc.ID)
+			_ = appProgress.Save()
 
 			ui.PrintBox("INSTRUCTIONS", sc.Description)
 
@@ -196,7 +200,7 @@ func newAttachCmd() *cobra.Command {
 		Short: "Re-attach to the active or specified scenario container",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := appState.ActiveScenario
+			id := appProgress.GetActive()
 			if len(args) > 0 {
 				id = args[0]
 			}
@@ -226,7 +230,7 @@ func newVerifyCmd() *cobra.Command {
 		Short: "Test whether you have successfully resolved the scenario",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := appState.ActiveScenario
+			id := appProgress.GetActive()
 			if len(args) > 0 {
 				id = args[0]
 			}
@@ -257,8 +261,8 @@ func newVerifyCmd() *cobra.Command {
 				fmt.Println(out)
 			}
 			if passed {
-				appState.RecordCompletion(sc.ID)
-				_ = appState.Save()
+				appProgress.RecordCompletion(sc.ID)
+				_ = appProgress.Save()
 				ui.PrintSuccess("Scenario completed successfully!")
 			} else {
 				ui.PrintFailure("Verification failed. Review the output above or run 'lp hint' for guidance.")
@@ -275,7 +279,7 @@ func newHintCmd() *cobra.Command {
 		Short: "Reveal progressive hints for the current challenge",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := appState.ActiveScenario
+			id := appProgress.GetActive()
 			if len(args) > 0 {
 				id = args[0]
 			}
@@ -294,8 +298,8 @@ func newHintCmd() *cobra.Command {
 			}
 
 			ui.PrintHeader(fmt.Sprintf("HINTS: %s", sc.Title))
-			p := appState.GetOrCreateProgress(sc.ID)
-			hintIdx := p.HintsViewed
+			rec := appProgress.GetRecord(sc.ID)
+			hintIdx := rec.HintsViewed
 			if hintIdx >= len(sc.Hints) {
 				ui.PrintInfo("All available hints have already been revealed:")
 				for i, h := range sc.Hints {
@@ -305,8 +309,8 @@ func newHintCmd() *cobra.Command {
 			}
 
 			ui.PrintHint("Hint %d/%d: %s", hintIdx+1, len(sc.Hints), sc.Hints[hintIdx])
-			appState.RecordHint(sc.ID, hintIdx)
-			_ = appState.Save()
+			appProgress.RecordHint(sc.ID, hintIdx)
+			_ = appProgress.Save()
 			return nil
 		},
 	}
@@ -318,7 +322,7 @@ func newResetCmd() *cobra.Command {
 		Short: "Reset the scenario container back to its initial broken state",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := appState.ActiveScenario
+			id := appProgress.GetActive()
 			if len(args) > 0 {
 				id = args[0]
 			}
@@ -355,7 +359,7 @@ func newStopCmd() *cobra.Command {
 		Short: "Stop and tear down the practice container",
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			id := appState.ActiveScenario
+			id := appProgress.GetActive()
 			if len(args) > 0 {
 				id = args[0]
 			}
@@ -375,9 +379,9 @@ func newStopCmd() *cobra.Command {
 				return err
 			}
 
-			if appState.ActiveScenario == id {
-				appState.ClearActive()
-				_ = appState.Save()
+			if appProgress.GetActive() == id {
+				appProgress.ClearActive()
+				_ = appProgress.Save()
 			}
 
 			ui.PrintSuccess("Scenario container lp-%s stopped and removed.", id)
@@ -400,7 +404,7 @@ func newProgressCmd() *cobra.Command {
 			for _, sc := range scenarios {
 				ts := trackStats[sc.Track]
 				ts.total++
-				if p, ok := appState.Scenarios[sc.ID]; ok && p.Completed {
+				if appProgress.IsCompleted(sc.ID) {
 					completed++
 					ts.completed++
 				}

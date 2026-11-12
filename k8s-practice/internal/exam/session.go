@@ -8,14 +8,14 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/elvin-mark/k8s-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/scenario"
 )
 
 type SessionMode string
 
 const (
 	ModePractice SessionMode = "practice"
-	ModeExam     = "exam"
+	ModeExam                 = "exam"
 )
 
 // ExamQuestionResult tracks status of a question in an exam session

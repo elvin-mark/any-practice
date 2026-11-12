@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elvin-mark/k8s-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/scenario"
 )
 
 func TestExamSession(t *testing.T) {

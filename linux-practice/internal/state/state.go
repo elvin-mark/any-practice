@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/elvin-mark/linux-practice/internal/config"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/config"
 	"gopkg.in/yaml.v3"
 )
 
@@ -21,7 +21,7 @@ type ScenarioProgress struct {
 
 // State represents the overall user progress and active challenge state.
 type State struct {
-	ActiveScenario string                      `yaml:"active_scenario,omitempty"`
+	ActiveScenario string                       `yaml:"active_scenario,omitempty"`
 	Scenarios      map[string]*ScenarioProgress `yaml:"scenarios"`
 }
 

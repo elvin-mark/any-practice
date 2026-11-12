@@ -9,10 +9,11 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 
-	"github.com/elvin-mark/k8s-practice/internal/cluster"
-	"github.com/elvin-mark/k8s-practice/internal/exam"
-	"github.com/elvin-mark/k8s-practice/internal/scenario"
-	"github.com/elvin-mark/k8s-practice/internal/ui"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/cluster"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/exam"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/progress"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/k8s-practice/internal/ui"
 )
 
 type keyMap struct {
@@ -66,39 +67,29 @@ type Model struct {
 	scenarios        []*scenario.Scenario
 	scenariosDir     string
 	targetContext    string
+	prog             *progress.Progress
 	cursor           int
 	statusMsg        string
 	activeScenarioID string
-	completed        map[string]bool
 	hintsRevealed    map[string]int
 	keys             keyMap
 }
 
 // NewModel initializes the CKA interactive TUI
-func NewModel(scenarios []*scenario.Scenario, scenariosDir string, targetContext string) Model {
-	completed := make(map[string]bool)
+func NewModel(scenarios []*scenario.Scenario, scenariosDir string, targetContext string, prog *progress.Progress) Model {
 	activeID := ""
-
-	// Check if existing session has progress
-	if session, err := exam.LoadSession(); err == nil && session != nil {
-		if session.Active {
-			activeID = session.ActiveScenario
-		}
-		for qID, qs := range session.Scores {
-			if qs.Passed {
-				completed[qID] = true
-			}
-		}
+	if prog != nil {
+		activeID = prog.GetActive()
 	}
 
 	return Model{
 		scenarios:        scenarios,
 		scenariosDir:     scenariosDir,
 		targetContext:    targetContext,
+		prog:             prog,
 		cursor:           0,
 		statusMsg:        "Ready. Select a scenario and press 'Enter' to start practicing.",
 		activeScenarioID: activeID,
-		completed:        completed,
 		hintsRevealed:    make(map[string]int),
 		keys:             defaultKeyMap,
 	}
@@ -156,6 +147,10 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				m.statusMsg = fmt.Sprintf("Scenario %s environment active! Solve challenge and press 'v' to verify.", sc.ID)
 			}
 			m.activeScenarioID = sc.ID
+			if m.prog != nil {
+				m.prog.RecordStart(sc.ID)
+				_ = m.prog.Save()
+			}
 			_, _ = exam.StartPracticeSession(sc.ID)
 
 		case key.Matches(msg, m.keys.Verify):
@@ -236,7 +231,17 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	case verifyResultMsg:
 		if msg.passed {
-			m.completed[msg.scenarioID] = true
+			if m.prog != nil {
+				weight := 5
+				for _, sc := range m.scenarios {
+					if sc.ID == msg.scenarioID {
+						weight = sc.Weight
+						break
+					}
+				}
+				m.prog.RecordCompletion(msg.scenarioID, weight)
+				_ = m.prog.Save()
+			}
 			m.statusMsg = fmt.Sprintf("🎉 SUCCESS! %s: %s", msg.scenarioID, msg.message)
 		} else {
 			m.statusMsg = fmt.Sprintf("❌ FAILED: %s: %s", msg.scenarioID, msg.message)
@@ -259,7 +264,7 @@ func (m Model) View() string {
 	earnedScore := 0
 	for _, sc := range m.scenarios {
 		totalScore += sc.Weight
-		if m.completed[sc.ID] {
+		if m.prog != nil && m.prog.IsCompleted(sc.ID) {
 			completedCount++
 			earnedScore += sc.Weight
 		}
@@ -292,7 +297,7 @@ func (m Model) View() string {
 		}
 
 		statusMark := ui.StatusPending
-		if m.completed[sc.ID] {
+		if m.prog != nil && m.prog.IsCompleted(sc.ID) {
 			statusMark = ui.StatusCompleted
 		}
 

@@ -71,12 +71,12 @@ func (m *Model) viewNormal() string {
 
 	// 3. Problem Description Card
 	descContent := fmt.Sprintf("%s\n\n%s", boldText.Render("Description:"), ex.Description)
-	b.WriteString(cardStyle.Width(m.width - 4).Render(descContent) + "\n\n")
+	b.WriteString(cardStyle.Width(m.width-4).Render(descContent) + "\n\n")
 
 	// 4. Status / Result Box
 	if m.isChecking {
 		checkingStyle := lipgloss.NewStyle().Foreground(colorWarning).Bold(true)
-		b.WriteString(cardStyle.Width(m.width - 4).Render(checkingStyle.Render("⏳ Running AST validation, unit tests, and complexity benchmarks...")) + "\n\n")
+		b.WriteString(cardStyle.Width(m.width-4).Render(checkingStyle.Render("⏳ Running AST validation, unit tests, and complexity benchmarks...")) + "\n\n")
 	} else if m.result != nil {
 		if !m.result.ASTValid {
 			// AST Failed
@@ -89,14 +89,14 @@ func (m *Model) viewNormal() string {
 				violations.WriteString(fmt.Sprintf("  • %s\n", v))
 			}
 			violations.WriteString("\n" + subtleText.Render("Please implement the algorithm from scratch without standard library cheat functions."))
-			b.WriteString(errorCardStyle.Width(m.width - 4).Render(violations.String()) + "\n\n")
+			b.WriteString(errorCardStyle.Width(m.width-4).Render(violations.String()) + "\n\n")
 		} else if !m.result.TestsPassed {
 			// Unit Tests Failed
 			var testFail strings.Builder
 			testFail.WriteString(lipgloss.NewStyle().Foreground(colorError).Bold(true).Render("❌ Unit Tests Failed\n\n"))
 			output := truncateLines(m.result.TestOutput, 12)
 			testFail.WriteString(output)
-			b.WriteString(errorCardStyle.Width(m.width - 4).Render(testFail.String()) + "\n\n")
+			b.WriteString(errorCardStyle.Width(m.width-4).Render(testFail.String()) + "\n\n")
 		} else if m.result.Passed {
 			// Passed!
 			var passBox strings.Builder
@@ -108,7 +108,7 @@ func (m *Model) viewNormal() string {
 				passBox.WriteString(fmt.Sprintf("  • Allocations:       %d B/op  (%d allocs/op)\n", m.result.AllocBytes, m.result.AllocsPerOp))
 			}
 			passBox.WriteString("\n" + lipgloss.NewStyle().Foreground(colorHighlight).Bold(true).Render("Press [n] to advance to the next exercise!"))
-			b.WriteString(successCardStyle.Width(m.width - 4).Render(passBox.String()) + "\n\n")
+			b.WriteString(successCardStyle.Width(m.width-4).Render(passBox.String()) + "\n\n")
 		}
 	}
 
@@ -119,7 +119,7 @@ func (m *Model) viewNormal() string {
 			lipgloss.NewStyle().Foreground(colorWarning).Bold(true).Render(hintTitle),
 			ex.Hints[m.hintLevel-1],
 		)
-		b.WriteString(cardStyle.BorderForeground(colorWarning).Width(m.width - 4).Render(hintContent) + "\n\n")
+		b.WriteString(cardStyle.BorderForeground(colorWarning).Width(m.width-4).Render(hintContent) + "\n\n")
 	}
 
 	// 6. Footer Hotkeys

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/elvin-mark/algo-practice/internal/exercise"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/exercise"
 )
 
 var pkgRegex = regexp.MustCompile(`^package\s+([a-zA-Z0-9_]+)`)

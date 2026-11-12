@@ -73,7 +73,7 @@ var (
 			MarginBottom(1)
 
 	// Text formatting
-	boldText = lipgloss.NewStyle().Bold(true).Foreground(colorTextLight)
+	boldText   = lipgloss.NewStyle().Bold(true).Foreground(colorTextLight)
 	subtleText = lipgloss.NewStyle().Foreground(colorSubtle)
 	mutedText  = lipgloss.NewStyle().Foreground(colorMuted)
 

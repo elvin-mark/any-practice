@@ -1,4 +1,4 @@
-module github.com/elvin-mark/algo-practice
+module github.com/elvin-mark/any-practice/algo-practice
 
 go 1.27.3
 

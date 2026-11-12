@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/elvin-mark/linux-practice/internal/state"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/state"
 )
 
 func TestState_Lifecycle(t *testing.T) {

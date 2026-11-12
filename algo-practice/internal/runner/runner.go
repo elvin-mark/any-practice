@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/elvin-mark/algo-practice/internal/astcheck"
-	"github.com/elvin-mark/algo-practice/internal/exercise"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/astcheck"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/exercise"
 )
 
 // Result holds the combined validation, test, and benchmark outcome.

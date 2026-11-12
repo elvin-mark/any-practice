@@ -31,9 +31,9 @@ test:
 	@echo "Testing algo-practice..."
 	@cd algo-practice && $(MAKE) test
 	@echo "Testing linux-practice..."
-	@cd linux-practice && go test ./internal/state ./internal/scenario ./internal/ui
+	@cd linux-practice && go test ./internal/state ./internal/scenario ./internal/progress ./internal/ui
 	@echo "Testing k8s-practice..."
-	@cd k8s-practice && go test ./internal/exam ./internal/scenario ./internal/ui
+	@cd k8s-practice && go test ./internal/exam ./internal/scenario ./internal/progress ./internal/ui
 	@echo "✓ All test suites passed!"
 
 ## vet: Runs go vet across all projects

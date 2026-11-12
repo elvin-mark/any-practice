@@ -3,7 +3,7 @@ package tui
 import (
 	tea "github.com/charmbracelet/bubbletea"
 
-	"github.com/elvin-mark/algo-practice/internal/exercise"
+	"github.com/elvin-mark/any-practice/algo-practice/internal/exercise"
 )
 
 func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {

@@ -9,12 +9,12 @@ import (
 	"github.com/charmbracelet/bubbles/key"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	"github.com/elvin-mark/linux-practice/embedded"
-	"github.com/elvin-mark/linux-practice/internal/config"
-	"github.com/elvin-mark/linux-practice/internal/container"
-	"github.com/elvin-mark/linux-practice/internal/scenario"
-	"github.com/elvin-mark/linux-practice/internal/state"
-	"github.com/elvin-mark/linux-practice/internal/ui"
+	"github.com/elvin-mark/any-practice/linux-practice/embedded"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/config"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/container"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/progress"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/scenario"
+	"github.com/elvin-mark/any-practice/linux-practice/internal/ui"
 )
 
 // Styling definitions aligned with the Any-Practice design system
@@ -100,7 +100,7 @@ var defaultKeyMap = keyMap{
 // Model represents the Bubble Tea TUI state.
 type Model struct {
 	registry     *scenario.Registry
-	state        *state.State
+	prog         *progress.Progress
 	manager      *container.Manager
 	scenarios    []*scenario.Scenario
 	cursor       int
@@ -111,11 +111,11 @@ type Model struct {
 }
 
 // NewModel creates an initialized TUI model.
-func NewModel(reg *scenario.Registry, st *state.State, mgr *container.Manager) Model {
+func NewModel(reg *scenario.Registry, prog *progress.Progress, mgr *container.Manager) Model {
 	scenarios := reg.All()
 	return Model{
 		registry:     reg,
-		state:        st,
+		prog:         prog,
 		manager:      mgr,
 		scenarios:    scenarios,
 		cursor:       0,
@@ -174,8 +174,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, nil
 			}
 
-			m.state.RecordStart(sc.ID)
-			_ = m.state.Save()
+			m.prog.RecordStart(sc.ID)
+			_ = m.prog.Save()
 
 			// Launch interactive shell via tea.ExecProcess
 			cName := container.ContainerName(sc.ID)
@@ -220,8 +220,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			if passed {
-				m.state.RecordCompletion(sc.ID)
-				_ = m.state.Save()
+				m.prog.RecordCompletion(sc.ID)
+				_ = m.prog.Save()
 				m.statusMsg = fmt.Sprintf("🎉 SUCCESS! %s passed:\n%s", sc.ID, out)
 			} else {
 				m.statusMsg = fmt.Sprintf("❌ Failed: %s", out)
@@ -240,8 +240,8 @@ func (m Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if curHint < len(sc.Hints) {
 				m.statusMsg = fmt.Sprintf("💡 Hint %d/%d: %s", curHint+1, len(sc.Hints), sc.Hints[curHint])
 				m.hintRevealed[sc.ID] = curHint + 1
-				m.state.RecordHint(sc.ID, curHint)
-				_ = m.state.Save()
+				m.prog.RecordHint(sc.ID, curHint)
+				_ = m.prog.Save()
 			} else {
 				m.statusMsg = fmt.Sprintf("💡 All hints revealed. Latest: %s", sc.Hints[len(sc.Hints)-1])
 			}
@@ -280,12 +280,7 @@ func (m Model) View() string {
 	var b strings.Builder
 
 	// Calculate statistics
-	completedCount := 0
-	for _, sc := range m.scenarios {
-		if p, ok := m.state.Scenarios[sc.ID]; ok && p.Completed {
-			completedCount++
-		}
-	}
+	completedCount := m.prog.CompletedCount()
 	progressPct := float64(completedCount) / float64(len(m.scenarios)) * 100
 
 	// 1. Unified Header Bar
@@ -310,7 +305,7 @@ func (m Model) View() string {
 		}
 
 		statusMark := ui.StatusPending
-		if p, ok := m.state.Scenarios[sc.ID]; ok && p.Completed {
+		if m.prog.IsCompleted(sc.ID) {
 			statusMark = ui.StatusCompleted
 		}
 
@@ -342,13 +337,9 @@ func (m Model) View() string {
 	rightCol.WriteString(fmt.Sprintf("%s %d mins\n", ui.SubtleText.Render("Est. Time:"), curScenario.EstimatedMinutes))
 
 	// Hints counter
-	p := m.state.Scenarios[curScenario.ID]
-	attempts := 0
-	hintsUsed := 0
-	if p != nil {
-		attempts = p.Attempts
-		hintsUsed = p.HintsViewed
-	}
+	rec := m.prog.GetRecord(curScenario.ID)
+	attempts := rec.Attempts
+	hintsUsed := rec.HintsViewed
 	rightCol.WriteString(fmt.Sprintf("%s %d | %s %d (%s %d)\n",
 		ui.SubtleText.Render("Attempts:"), attempts,
 		ui.SubtleText.Render("Hints:"), len(curScenario.Hints),
